@@ -1,40 +1,53 @@
 import { Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import {Account, AuthResponse} from '../../models/profile/account';
-import {environment} from '../../../environments/environment';
+import { Account, AuthResponse } from '../../models/profile/account';
+import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
-import {ApiWrapper} from '../api-wrapper';
+import { ApiWrapper } from '../api-wrapper';
+import { ApiError } from '../../models/api-error';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
-  private readonly baseAuthUrl = `${environment.apiUrl}/auth`; // Placeholder API URL
+  private readonly baseAuthUrl = `${environment.apiUrl}/auth`;
 
-  private _account = signal<Account | undefined>(undefined);
-  private _selectedAccount = signal<Account | null>(null);
-  private _loading = signal<boolean>(false);
-  private _error = signal<string | null>(null);
+  private readonly _account = signal<Account | undefined>(undefined);
+  private readonly _selectedAccount = signal<Account | null>(null);
+  private readonly _loading = signal<boolean>(false);
+  private readonly _error = signal<string | null>(null);
 
   public readonly account = this._account.asReadonly();
   public readonly selectedAccount = this._selectedAccount.asReadonly();
   public readonly loading = this._loading.asReadonly();
   public readonly error = this._error.asReadonly();
 
-  constructor(private api: ApiWrapper, private cookieService: CookieService) { }
+  constructor(
+    private readonly api: ApiWrapper,
+    private readonly cookieService: CookieService,
+  ) {}
 
   async createAccount(account: Account): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      const response = await firstValueFrom(this.api.post<Account>(`${this.baseAuthUrl}/register`, account));
+      const response = await firstValueFrom(
+        this.api.post<Account>(`${this.baseAuthUrl}/register`, account),
+      );
+      console.log(response);
       if (response) {
         this._account.set(response);
       }
     } catch (error) {
-      this._error.set('Failed to create _account');
-      throw error;
+      const apiError = error as ApiError;
+      if (apiError?.error?.message) {
+        this._error.set(apiError.error.message);
+      } else if (apiError?.message) {
+        this._error.set(apiError.message);
+      } else {
+        this._error.set('Failed to create account');
+      }
     } finally {
       this._loading.set(false);
     }
@@ -46,7 +59,9 @@ export class AccountService {
 
     try {
       account.updatedAt = new Date();
-      const updatedAccount = await firstValueFrom(this.api.put<Account>(`${this.baseAuthUrl}/${id}`, account));
+      const updatedAccount = await firstValueFrom(
+        this.api.put<Account>(`${this.baseAuthUrl}/${id}`, account),
+      );
 
       if (updatedAccount) {
         this._account.set(updatedAccount);
@@ -82,34 +97,45 @@ export class AccountService {
     }
   }
 
-  async loginAccount(email: string, password: string): Promise<AuthResponse> {
+  async loginAccount(email: string, password: string): Promise<boolean> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      const isValid = await firstValueFrom(this.api.post<AuthResponse>(`${this.baseAuthUrl}/login`, {
-        email,
-        password
-      }));
+      const isValid = await firstValueFrom(
+        this.api.post<AuthResponse>(`${this.baseAuthUrl}/login`, {
+          email,
+          password,
+        }),
+      );
 
-      if(isValid && isValid.token) {
+      if (isValid?.token) {
         this._selectedAccount.set(isValid.account);
+        this.setLoggedIn(isValid.token);
       }
 
-      return isValid || false;
-    } catch (error) {
-      this._error.set('Failed to validate login');
-      throw error;
+      return isValid?.account !== undefined;
+    } catch (error: unknown) {
+      // Use the caught error to provide a more specific message when possible.
+      let message = 'Invalid Credentials';
+      if (error instanceof Error && error.message) {
+        message = error.message;
+      }
+      this._error.set(message);
+      return false;
     } finally {
       this._loading.set(false);
     }
   }
 
-  setLoggedIn(token: string): void {
-    if(this.cookieService.get("jwt_session")) {
-      this.cookieService.delete("jwt_session", "/");
-    }
-    this.cookieService.set("jwt_session", token, 3600, "/");
+  clearError(): void {
+    this._error.set(null);
   }
 
+  setLoggedIn(token: string): void {
+    if (this.cookieService.get('jwt_session')) {
+      this.cookieService.delete('jwt_session', '/');
+    }
+    this.cookieService.set('jwt_session', token, 3600, '/');
+  }
 }

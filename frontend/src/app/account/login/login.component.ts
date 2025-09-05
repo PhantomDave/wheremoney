@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatError, MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import {AccountService} from '../../services/profile/account-service';
-import {Router, RouterLink} from '@angular/router';
-
+import { AccountService } from '../../services/profile/account-service';
+import { Router, RouterLink } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
@@ -19,20 +20,26 @@ import {Router, RouterLink} from '@angular/router';
     MatLabel,
     MatSuffix,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    MatProgressSpinner,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   loginForm: FormGroup;
   submitted = false;
   showPassword = false;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly accountService: AccountService,
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar,
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -58,13 +65,19 @@ export class LoginComponent {
       return;
     }
 
-    const loginResponse = await this.accountService.loginAccount(this.loginForm.value.email, this.loginForm.value.password);
+    await this.accountService.loginAccount(
+      this.loginForm.value.email,
+      this.loginForm.value.password,
+    );
+
+    if (this.error() !== null) {
+      const action = 'Close';
+      const message = this.error()!;
+      this.snackBar.open(message, action);
+    }
 
     if (this.accountService.selectedAccount !== null) {
-      this.accountService.setLoggedIn(loginResponse.token);
       await this.router.navigate(['/']);
-      return;
     }
   }
-
 }

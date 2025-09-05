@@ -3,50 +3,81 @@
     <div class="auth-header">
       <h2>Create account</h2>
     </div>
+    @if (this.loading() === false) {
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-body">
+        <mat-form-field appearance="outline" class="full-width form-field-full">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+          @if ((f['email'].touched || submitted) && f['email'].errors?.['required']) {
+            <mat-error>Email is required</mat-error>
+          }
+          @if ((f['email'].touched || submitted) && f['email'].errors?.['email']) {
+            <mat-error>Please enter a valid email</mat-error>
+          }
+        </mat-form-field>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-body">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Your username"
+            autocomplete="username"
+          />
+          @if ((f['username'].touched || submitted) && f['username'].errors?.['required']) {
+            <mat-error>Username is required</mat-error>
+          }
+          @if ((f['username'].touched || submitted) && f['username'].errors?.['minlength']) {
+            <mat-error>Username must be at least 3 characters</mat-error>
+          }
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width form-field-full">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder="you@example.com" autocomplete="email" />
-        @if ((f['email'].touched || submitted) && f['email'].errors?.['required']) {
-          <mat-error>Email is required</mat-error>
-        }
-        @if ((f['email'].touched || submitted) && f['email'].errors?.['email']) {
-          <mat-error>Please enter a valid email</mat-error>
-        }
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if ((f['password'].touched || submitted) && f['password'].errors?.['required']) {
+            <mat-error>Password is required</mat-error>
+          }
+          @if ((f['password'].touched || submitted) && f['password'].errors?.['minlength']) {
+            <mat-error>Password must be at least 6 characters</mat-error>
+          }
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Username</mat-label>
-        <input matInput formControlName="username" placeholder="Your username" autocomplete="username" />
-        @if ((f['username'].touched || submitted) && f['username'].errors?.['required']) {
-          <mat-error>Username is required</mat-error>
-        }
-        @if ((f['username'].touched || submitted) && f['username'].errors?.['minlength']) {
-          <mat-error>Username must be at least 3 characters</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password" autocomplete="new-password" />
-        <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
-          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        @if ((f['password'].touched || submitted) && f['password'].errors?.['required']) {
-          <mat-error>Password is required</mat-error>
-        }
-        @if ((f['password'].touched || submitted) && f['password'].errors?.['minlength']) {
-          <mat-error>Password must be at least 6 characters</mat-error>
-        }
-      </mat-form-field>
-
-      <div class="auth-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid" class="primary-btn">Register</button>
-        <a routerLink="/account/login" class="secondary-link">Have an account?</a>
-      </div>
-
-    </form>
+        <div class="auth-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="registerForm.invalid"
+            class="primary-btn"
+          >
+            Register
+          </button>
+          <a routerLink="/account/login" class="secondary-link">Have an account?</a>
+        </div>
+      </form>
+    } @else {
+      <mat-spinner mode="indeterminate"></mat-spinner>
+    }
   </div>
 </div>

@@ -8,7 +8,7 @@ services:
     develop:
       watch:
         - action: sync
-          path: .
+          path: ./backend/WhereMoney.Api
           target: /app
         - action: rebuild
           path: pyproject.toml

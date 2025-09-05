@@ -21,15 +21,13 @@ RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock* /app/
-
 RUN poetry config virtualenvs.create false \
     && poetry config virtualenvs.in-project false \
-    && poetry install --no-interaction --no-ansi --no-root \
-    && which flask || echo "Flask not found in PATH" \
-    && python -m flask --version || echo "Flask module not accessible"
+    && poetry lock \
+    && poetry install --no-interaction --no-ansi --no-root
 
 COPY . /app
 
 ENV FLASK_APP=app.py
 
-CMD ["sh", "-c", "python -m flask db upgrade && python app.py"]
+CMD ["sh", "-c", "poetry run python -m flask db upgrade && poetry run python app.py"]

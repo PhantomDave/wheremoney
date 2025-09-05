@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import {CookieService} from 'ngx-cookie-service';
-import {Router} from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiWrapper {
-  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) { }
+  constructor(
+    private readonly http: HttpClient,
+    private readonly cookieService: CookieService,
+    private readonly router: Router,
+  ) {}
 
   get<T>(url: string, options?: any) {
     return this.request<T>('GET', url, undefined, options);
@@ -30,13 +34,7 @@ export class ApiWrapper {
     return this.request<T>('PATCH', url, body, options);
   }
 
-  request<T>(
-    method: string,
-    url: string,
-    body?: any,
-    options?: any,
-    withCredentials?: boolean,
-  ) {
+  request<T>(method: string, url: string, body?: any, options?: any, withCredentials?: boolean) {
     method = method.toUpperCase();
 
     if (method === 'GET' || method === 'DELETE') {
@@ -59,8 +57,7 @@ export class ApiWrapper {
 
     let header = new HttpHeaders();
     header = header.set('Content-Type', 'application/json');
-    if(withCredentials)
-      header = header.set('Bearer', this.cookieService.get('jwt_session'));
+    if (withCredentials) header = header.set('Bearer', this.cookieService.get('jwt_session'));
 
     options.headers = header;
     options.body = body;

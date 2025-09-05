@@ -1,14 +1,21 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
+import { Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
+import { Account } from '../../models/profile/account';
 import { AccountService } from '../../services/profile/account-service';
-import {Account} from '../../models/profile/account';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -21,21 +28,27 @@ import {Router} from '@angular/router';
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    RouterModule
+    RouterModule,
+    MatProgressSpinner,
   ],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   registerForm: FormGroup;
   submitted = false;
   showPassword = false;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly accountService: AccountService,
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar,
+  ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -64,11 +77,20 @@ export class RegisterComponent {
     const account: Account = new Account(
       this.registerForm.value.username,
       this.registerForm.value.email,
-      this.registerForm.value.password
-    )
+      this.registerForm.value.password,
+    );
+
+    if (this.error() !== null) {
+      setTimeout(() => {
+        this.accountService.clearError();
+      }, 3000);
+      const message = this.error()!;
+      this.snackBar.open(message, 'Close', { duration: 3000 });
+      return;
+    }
 
     await this.accountService.createAccount(account);
-    if(this.accountService.account !== undefined){
+    if (this.accountService.account !== undefined) {
       this.registerForm.reset();
       this.submitted = false;
       await this.router.navigate(['/account/login']);
