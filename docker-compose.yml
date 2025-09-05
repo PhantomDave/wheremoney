@@ -29,7 +29,7 @@ services:
     develop:
       watch:
         - action: sync
-          path: .
+          path: ./frontend
           target: /app
         - action: rebuild
           path: package-lock.json
