@@ -1,0 +1,51 @@
+@if (isLoggedIn()) {
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav
+                 mode="side"
+                 [(opened)]="opened"
+                 class="sidenav">
+      <div class="sidenav-header">
+        <h3>Navigation</h3>
+      </div>
+      <mat-nav-list class="sidenav-content">
+        <a mat-list-item href="#" class="nav-item">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <span matListItemTitle>Home</span>
+        </a>
+        <a mat-list-item href="#" class="nav-item">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle>Settings</span>
+        </a>
+        <div class="bottom-nav">
+          <a mat-list-item href="#" class="nav-item">
+            <mat-icon matListItemIcon>account_circle</mat-icon>
+            <span matListItemTitle>Profile</span>
+          </a>
+
+          <!-- Theme toggle (clickable list item) -->
+          <a mat-list-item role="button" class="nav-item" (click)="toggleTheme()">
+            <mat-icon matListItemIcon>{{ isDark ? 'dark_mode' : 'light_mode' }}</mat-icon>
+            <span matListItemTitle>{{ isDark ? 'Dark' : 'Light' }} theme</span>
+          </a>
+        </div>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <div class="content-header">
+        <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <h2>This will become a breadcrumb</h2>
+      </div>
+      <div class="content-body">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+} @else {
+  <div class="container-fullscreen-flex">
+    <router-outlet></router-outlet>
+  </div>
+}

@@ -1,0 +1,115 @@
+/* Sidenav Container */
+.sidenav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--mat-sys-surface);
+}
+
+/* Sidenav Styling */
+.sidenav {
+  width: 200px;
+  background-color: var(--mat-sys-surface-container);
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 1px;
+}
+
+/* Sidenav Header */
+.sidenav-header {
+  padding: 24px 16px 16px 16px;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.sidenav-header h3 {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.sidenav-content {
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 82px);
+  overflow-x: hidden;
+}
+
+.nav-item {
+  color: var(--mat-sys-on-surface) !important;
+  text-decoration: none;
+  margin: 4px 8px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.bottom-nav {
+  height: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.nav-item:hover {
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mat-sys-on-primary-container) !important;
+}
+
+.nav-item:hover mat-icon {
+  color: var(--mat-sys-on-primary-container) !important;
+}
+
+.nav-item mat-icon {
+  color: var(--mat-sys-primary);
+  transition: color 0.2s ease;
+}
+
+/* Main Content Area */
+.main-content {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: var(--mat-sys-surface-container-highest);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: var(--mat-sys-elevation-level-1);
+}
+
+.menu-button {
+  padding: 16px 24px;
+  color: var(--mat-sys-on-surface);
+}
+.content-header h2 {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+  color: var(--mat-sys-on-surface);
+}
+
+.content-body {
+  padding: 24px;
+  flex: 1;
+  overflow: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .sidenav-container {
+    background-color: var(--mat-sys-surface);
+  }
+}

@@ -1,0 +1,79 @@
+/* Themed Register styles - reuse same variable tokens as login/main layout */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: grey;
+  color: var(--mat-sys-on-surface);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--mat-sys-elevation-level-2, 0 6px 18px rgba(0,0,0,0.08));
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.auth-header {
+  margin-bottom: 12px;
+}
+
+.auth-header h2 {
+  margin: 0;
+  font: var(--mat-sys-headline-small, 600 20px/24px Inter, system-ui, sans-serif);
+  color: var(--mat-sys-on-surface);
+}
+
+.form-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-body .full-width {
+  grid-column: 1 / -1;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+button.primary-btn {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+a.secondary-link {
+  color: var(--mat-sys-primary-container);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 520px) {
+  .auth-card {
+    padding: 18px;
+    border-radius: 10px;
+  }
+
+  .form-body {
+    grid-template-columns: 1fr;
+  }
+}

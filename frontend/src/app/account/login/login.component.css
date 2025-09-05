@@ -1,0 +1,82 @@
+/* Themed Login styles - uses global CSS variables from main layout */
+.auth-container {
+  /* full viewport height center */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: inherit;
+  color: var(--mat-sys-on-surface);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--mat-sys-elevation-level-2, 0 6px 18px rgba(0,0,0,0.08));
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.auth-header {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-header h2 {
+  margin: 0;
+  font: var(--mat-sys-headline-small, 600 20px/24px Inter, system-ui, sans-serif);
+  color: var(--mat-sys-on-surface);
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button.primary-btn {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+a.secondary-link {
+  color: var(--mat-sys-primary-container);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Small screens: card fills width with side padding */
+@media (max-width: 520px) {
+  .auth-card {
+    padding: 18px;
+    border-radius: 10px;
+  }
+}
+
