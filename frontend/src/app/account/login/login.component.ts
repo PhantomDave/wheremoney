@@ -24,7 +24,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatProgressSpinner,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm: FormGroup;

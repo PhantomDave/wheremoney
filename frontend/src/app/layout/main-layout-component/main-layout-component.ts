@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {FormsModule} from '@angular/forms';
-import {RouterOutlet} from '@angular/router';
-import {AccountService} from '../../services/profile/account-service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
+import { AccountService } from '../../services/profile/account-service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-main-layout-component',
@@ -24,17 +25,19 @@ import {AccountService} from '../../services/profile/account-service';
     MatListModule,
     MatSlideToggleModule,
     FormsModule,
-    RouterOutlet
+    RouterOutlet,
   ],
   templateUrl: './main-layout-component.html',
-  styleUrls: ['./main-layout-component.css']
+  styleUrls: ['./main-layout-component.css'],
 })
 export class MainLayoutComponent implements OnInit {
   opened: boolean = true;
   isDark: boolean = false;
 
-  constructor(private accountService: AccountService) {
-  }
+  constructor(
+    private readonly cookieService: CookieService,
+    private readonly router: Router,
+  ) {}
 
   ngOnInit(): void {
     // Initialize theme from localStorage, otherwise use prefers-color-scheme
@@ -62,7 +65,13 @@ export class MainLayoutComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    console.log('isLoggedIn', this.accountService.selectedAccount());
-    return this.accountService.selectedAccount() !== null;
+    return (
+      this.cookieService.get('jwt_session') !== null && this.cookieService.get('jwt_session') !== ''
+    );
+  }
+
+  logout() {
+    this.cookieService.delete('jwt_session');
+    this.router.navigate(['/account/login']);
   }
 }

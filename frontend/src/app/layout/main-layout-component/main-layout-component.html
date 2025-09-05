@@ -1,10 +1,6 @@
 @if (isLoggedIn()) {
-
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav
-                 mode="side"
-                 [(opened)]="opened"
-                 class="sidenav">
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened" class="sidenav">
       <div class="sidenav-header">
         <h3>Navigation</h3>
       </div>
@@ -13,14 +9,18 @@
           <mat-icon matListItemIcon>home</mat-icon>
           <span matListItemTitle>Home</span>
         </a>
+        <a mat-list-item href="/table/create" class="nav-item">
+          <mat-icon matListItemIcon>table_chart</mat-icon>
+          <span matListItemTitle>Create Table</span>
+        </a>
         <a mat-list-item href="#" class="nav-item">
           <mat-icon matListItemIcon>settings</mat-icon>
           <span matListItemTitle>Settings</span>
         </a>
         <div class="bottom-nav">
-          <a mat-list-item href="#" class="nav-item">
+          <a mat-list-item (click)="logout()" class="nav-item">
             <mat-icon matListItemIcon>account_circle</mat-icon>
-            <span matListItemTitle>Profile</span>
+            <span matListItemTitle>Logout</span>
           </a>
 
           <a mat-list-item role="button" class="nav-item" (click)="toggleTheme()">

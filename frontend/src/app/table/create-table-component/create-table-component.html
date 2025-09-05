@@ -1,0 +1,97 @@
+<section class="create-table">
+  <h2>Create Table</h2>
+
+  <form [formGroup]="tableForm" (ngSubmit)="onSubmit()" novalidate>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Table name</mat-label>
+      <input
+        matInput
+        id="tableName"
+        type="text"
+        formControlName="tableName"
+        placeholder="e.g. users"
+      />
+      @if (tableForm.get('tableName')?.hasError('required')) {
+        <mat-error>Table name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Number of Columns</mat-label>
+      <input
+        matInput
+        id="columnCount"
+        type="number"
+        formControlName="columnCount"
+        min="1"
+        max="50"
+      />
+      @if (tableForm.get('columnCount')?.invalid) {
+        <mat-error>Column count is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="columns">
+      <h3>Columns</h3>
+      <div class="column-list" formArrayName="columns">
+        @for (col of columns.controls; track $index; let i = $index) {
+          <div class="column" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="col-name">
+              <mat-label>Column {{ i + 1 }} Name</mat-label>
+              <input matInput type="text" formControlName="name" placeholder="e.g. email" />
+              @if (columns.at(i).get('name')?.hasError('required')) {
+                <mat-error>Name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              class="col-name"
+              #tooltip="matTooltip"
+              matTooltip="This should be the header name as it appears in the CSV/XLSX file."
+              matTooltipPosition="right"
+              matTooltipShowDelay="2000"
+            >
+              <mat-label>Header name row</mat-label>
+              <input matInput type="text" formControlName="header" placeholder="e.g. email" />
+              @if (columns.at(i).get('header')?.hasError('required')) {
+                <mat-error>Header name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-type">
+              <mat-label>Data type</mat-label>
+              <mat-select formControlName="type">
+                @for (t of dataTypes; track $index) {
+                  <mat-option [value]="t.value">{{ t.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="removeColumn(i)"
+              aria-label="Remove column"
+            >
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="column-actions">
+        <button mat-raised-button color="primary" type="button" (click)="addColumn()">
+          Add column
+        </button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="tableForm.invalid">
+        Create
+      </button>
+    </div>
+  </form>
+</section>
