@@ -22,6 +22,23 @@ services:
     ports:
       - "5000:5000"
 
+  webapp:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+        - action: rebuild
+          path: package-lock.json
+    container_name: webapp
+    networks:
+      - backend
+    ports:
+      - "4200:4200"
+
   db:
     image: postgres:latest
     container_name: postgres_db
