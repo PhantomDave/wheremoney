@@ -2,7 +2,7 @@ from flask import request, g
 from flask_restx import Namespace, Resource, fields
 from models.dbConnector import db
 from models.user import User
-from middleware.jwt_auth import public_endpoint, generate_token
+from middleware.jwt_auth import public_endpoint
 
 api = Namespace('users', description='User operations')
 
@@ -16,16 +16,6 @@ user_input = api.model('UserInput', {
     'username': fields.String(required=True, description='The username'),
     'email': fields.String(required=True, description='The email address')
 })
-
-@api.route('/')
-class UserList(Resource):
-    @api.doc(security=[])  # Override global security for public endpoint
-    @public_endpoint
-    @api.marshal_list_with(user_model)
-    def get(self):
-        """List all users (public endpoint)"""
-        users = User.query.all()
-        return [user.serialize() for user in users]
 
 @api.route('/<int:id>')
 @api.response(404, 'User not found')

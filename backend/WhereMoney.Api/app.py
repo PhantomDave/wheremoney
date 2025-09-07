@@ -7,15 +7,19 @@ from middleware.jwt_auth import authenticate
 import os
 from config import config_by_name
 
+from models.user import User
+from models.table import Table
+from models.column import Column
+
 config_name = os.getenv('FLASK_CONFIG', 'default')
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 app.config.from_object(config_by_name.get(config_name, config_by_name['default']))
 config_by_name.get(config_name, config_by_name['default']).init_app(app)
 
 # Enable CORS for all origins
-CORS(app, origins=app.config.get('CORS_ORIGINS', '*'), methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], allow_headers=["Content-Type", "Authorization"])
-
+CORS(app, origins=app.config.get('CORS_ORIGINS', '*'), methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], allow_headers=["Content-Type", "Authorization", "bearer", "Bearer", "X-Requested-With"], supports_credentials=True)
 # Initialize database and migrations
 db.init_app(app)
 
@@ -46,6 +50,8 @@ from controllers.authcontroller import api as auth_ns
 api.add_namespace(auth_ns)
 from controllers.importcontroller import api as import_ns
 api.add_namespace(import_ns)
+from controllers.tablecontroller import api as table_ns
+api.add_namespace(table_ns)
 
 app.before_request(authenticate)
 

@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
-import { Account } from '../../models/profile/account';
+import { Account } from '../../models/account';
 import { AccountService } from '../../services/profile/account-service';
 
 @Component({
@@ -74,11 +74,11 @@ export class RegisterComponent {
       return;
     }
 
-    const account: Account = new Account(
-      this.registerForm.value.username,
-      this.registerForm.value.email,
-      this.registerForm.value.password,
-    );
+    const account: Account = {
+      username: this.registerForm.value.username,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+    };
 
     if (this.error() !== null) {
       setTimeout(() => {

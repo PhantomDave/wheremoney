@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Account, AuthResponse } from '../../models/profile/account';
+import { Account, AuthResponse } from '../../models/account';
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { ApiWrapper } from '../api-wrapper';

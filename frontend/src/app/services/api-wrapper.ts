@@ -14,24 +14,24 @@ export class ApiWrapper {
     private readonly router: Router,
   ) {}
 
-  get<T>(url: string, options?: any) {
-    return this.request<T>('GET', url, undefined, options);
+  get<T>(url: string, options?: any, withCredentials?: boolean) {
+    return this.request<T>('GET', url, undefined, options, withCredentials);
   }
 
-  post<T>(url: string, body: any, options?: any) {
-    return this.request<T>('POST', url, body, options);
+  post<T>(url: string, body: any, options?: any, withCredentials?: boolean) {
+    return this.request<T>('POST', url, body, options, withCredentials);
   }
 
-  put<T>(url: string, body: any, options?: any) {
-    return this.request<T>('PUT', url, body, options);
+  put<T>(url: string, body: any, options?: any, withCredentials?: boolean) {
+    return this.request<T>('PUT', url, body, options, withCredentials);
   }
 
-  delete<T>(url: string, options?: any) {
-    return this.request<T>('DELETE', url, undefined, options);
+  delete<T>(url: string, options?: any, withCredentials?: boolean) {
+    return this.request<T>('DELETE', url, undefined, options, withCredentials);
   }
 
-  patch<T>(url: string, body: any, options?: any) {
-    return this.request<T>('PATCH', url, body, options);
+  patch<T>(url: string, body: any, options?: any, withCredentials?: boolean) {
+    return this.request<T>('PATCH', url, body, options, withCredentials);
   }
 
   request<T>(method: string, url: string, body?: any, options?: any, withCredentials?: boolean) {
