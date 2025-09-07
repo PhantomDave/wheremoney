@@ -67,7 +67,7 @@ export class ApiWrapper {
       catchError((err) => {
         if (err.status === 401) {
           this.cookieService.delete('jwt_session');
-          this.router.navigate(['/account/login']);
+          this.router.navigate(['/account/login']).then();
         }
         return throwError(() => err);
       }),

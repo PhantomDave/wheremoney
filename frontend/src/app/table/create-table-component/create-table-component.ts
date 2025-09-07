@@ -101,7 +101,7 @@ export class CreateTableComponent {
     }
 
     console.log('Create table payload:', tableModel);
-    const result = this.tableService.getAllUserTables();
+    const result = this.tableService.createTable(tableModel);
 
   }
 }
