@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home-component/home-component';
 import { CreateTableComponent } from './table/create-table-component/create-table-component';
 import { TableDetailComponent } from './table/table-detail-component/table-detail-component';
 import { NotFoundComponent } from './utils/not-found-component/not-found-component';
+import { TablesListComponent } from './table/tables-list-component/tables-list-component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'account/login' },
@@ -18,14 +19,9 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent },
     ],
   },
-  {
-    path: 'table',
-    canActivate: [loggedGuardGuard],
-    children: [
-      { path: 'create', component: CreateTableComponent },
-      { path: ':id', component: TableDetailComponent },
-    ],
-  },
+  { path: 'table', canActivate: [loggedGuardGuard], component: TablesListComponent },
+  { path: 'table/create', canActivate: [loggedGuardGuard], component: CreateTableComponent },
+  { path: 'table/:id', canActivate: [loggedGuardGuard], component: TableDetailComponent },
   { path: 'home', component: HomeComponent, canActivate: [loggedGuardGuard] },
   { path: '**', redirectTo: '404' },
   { path: '404', component: NotFoundComponent },

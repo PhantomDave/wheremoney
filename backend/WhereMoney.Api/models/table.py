@@ -1,3 +1,4 @@
+from models.column import Column
 from models.dbConnector import db
 import bcrypt
 
@@ -22,3 +23,25 @@ class Table(db.Model):
             'name': self.name,
             'columns': [column.serialize() for column in self.columns],
         }
+
+    @staticmethod
+    def createtable(name, owner_id, columns):
+        table = Table(name=name, owner_id=owner_id)
+        db.session.add(table)
+
+        for col_data in columns:
+            col_name = col_data.get('name')
+            col_type = col_data.get('type')
+            if not col_name or not col_type:
+                return {
+                    'error': 'Column name and type are required'
+                }
+            column = Column(name=col_name, data_type=col_type, table_id=table.id)
+            table.columns.append(column)
+        db.session.commit()
+        return table
+
+    def deletetable(self):
+        db.session.delete(self)
+        db.session.commit()
+        return {'message': 'Table deleted successfully'}

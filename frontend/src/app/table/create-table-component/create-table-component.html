@@ -1,6 +1,10 @@
 <section class="create-table">
   <h2>Create Table</h2>
 
+  @if (error()) {
+    <mat-error class="form-error">{{ error() }}</mat-error>
+  }
+
   <form [formGroup]="tableForm" (ngSubmit)="onSubmit()" novalidate>
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Table name</mat-label>
@@ -89,7 +93,7 @@
     </div>
 
     <div class="actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="tableForm.invalid">
+      <button mat-raised-button color="primary" type="submit" [disabled]="tableForm.invalid || loading()">
         Create
       </button>
     </div>

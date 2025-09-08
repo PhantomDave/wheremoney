@@ -1,0 +1,11 @@
+<mat-nav-list>
+  <h3 mat-subheader>Tables</h3>
+  @if (!loading) {
+    @for (table of tables; track table.id) {
+      <button mat-list-item (click)="openTable(table?.id!)">{{ table.name }}</button>
+    }
+  } @else {
+    <mat-spinner></mat-spinner>
+  }
+</mat-nav-list>
+

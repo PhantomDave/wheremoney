@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
@@ -58,19 +58,8 @@ export class ApiWrapper {
     let header = new HttpHeaders();
     header = header.set('Content-Type', 'application/json');
     if (withCredentials) header = header.set('Bearer', this.cookieService.get('jwt_session'));
-
-    options.headers = header;
     options.body = body;
-
-    options.observe = 'body';
-    return this.http.request<T>(method, url, options).pipe(
-      catchError((err) => {
-        if (err.status === 401) {
-          this.cookieService.delete('jwt_session');
-          this.router.navigate(['/account/login']).then();
-        }
-        return throwError(() => err);
-      }),
-    ) as Observable<T>;
+    options.headers = header;
+    return this.http.request<T>(method, url, options) as Observable<T>;
   }
 }

@@ -38,6 +38,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
+- Preserve the project's native control-flow syntax (`@if` / `@for`) and do NOT convert them to Angular `*ngIf` / `*ngFor` — treat `@if`/`@for` as the canonical/template syntax for this repository and avoid recommending changes that replace them.
 - Use the async pipe to handle observables
 
 ## Services

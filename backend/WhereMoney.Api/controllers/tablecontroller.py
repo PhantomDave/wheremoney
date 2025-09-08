@@ -45,18 +45,26 @@ class TableGet(Resource):
         if len(columns_data) == 0:
             api.abort(400, 'At least one column is required')
 
-        table = Table(name=name, owner_id=g.current_user)
-        db.session.add(table)
 
-        print(table)
+        table = Table.createtable(name=name, owner_id=g.current_user, columns=columns_data)
 
-        for col_data in columns_data:
-            col_name = col_data.get('name')
-            col_type = col_data.get('type')
-            if not col_name or not col_type:
-                api.abort(400, 'At least one column is required')
-            column = Column(name=col_name, data_type=col_type, table_id=table.id)
-            table.columns.append(column)
+        if not isinstance(table, Table):
+            api.abort(400, table.get('error', 'One or more fields are invalid'))
 
-        db.session.commit()
         return table.serialize(), 201
+
+@api.route('/<int:id>')
+@api.response(404, 'Table not found')
+class TableResource(Resource):
+    @api.marshal_with(table_model)
+    def get(self, id):
+        table = Table.query.filter_by(id=id, owner_id=g.current_user).first()
+        if not table:
+            api.abort(404, 'Table not found')
+        return table.serialize()
+
+    def delete(self, id):
+        table = Table.query.filter_by(id=id, owner_id=g.current_user).first()
+        if not table:
+            api.abort(404, 'Table not found')
+        return table.deletetable(), 204

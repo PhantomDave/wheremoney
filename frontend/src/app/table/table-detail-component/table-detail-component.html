@@ -1,1 +1,62 @@
-<p>table-detail-component works!</p>
+<div class="table-detail-container">
+  <!-- Loading state using signal -->
+  @if (loading()) {
+    <div class="loading-spinner">
+      <p>Loading table details...</p>
+    </div>
+  }
+
+  <!-- Error state using signal -->
+  @if (error()) {
+    <div class="error-message">
+      <p>{{ error() }}</p>
+      <button (click)="onClearError()" class="btn-secondary">
+        Clear Error
+      </button>
+    </div>
+  }
+
+  <!-- Table content using computed signals -->
+  @if (hasTable() && !loading()) {
+    <div class="table-content">
+      <header class="table-header">
+        <h1>{{ tableTitle() }}</h1>
+        <button routerLink="/table" class="btn-secondary">
+          Clear Selection
+        </button>
+      </header>
+
+      <div class="table-info">
+        <div class="info-row">
+          <label>Table ID:</label>
+          <span>{{ selectedTable()?.id }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>Table Name:</label>
+          <span>{{ selectedTable()?.name }}</span>
+        </div>
+
+        @if (selectedTable()?.columns && selectedTable()?.columns!.length > 0) {
+          <div class="columns-section">
+            <h3>Columns</h3>
+            <div class="columns-list">
+              @for (column of selectedTable()?.columns; track column.id) {
+                <div class="column-item">
+                  <span class="column-name">{{ column.name }}</span>
+                  <span class="column-type">{{ column.type }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (!hasTable() && !loading() && !error()) {
+    <div class="no-table-message">
+      <p>No table selected. Please select a table to view details.</p>
+    </div>
+  }
+</div>
