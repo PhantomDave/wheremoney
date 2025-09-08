@@ -73,3 +73,32 @@ class Table(db.Model):
             print("Error creating table:", e)
             return {'error': str(e)}
 
+    def populate_from_sheets(self, sheets_data):
+        try:
+            table_name = f"{self.name}_{self.owner_id}"
+            for sheet_name, sheet_info in sheets_data.items():
+                columns = sheet_info['columns']
+                data = sheet_info['data']
+
+                for row in data:
+                    col_names = []
+                    col_values = []
+                    param_map = {}
+                    for col in columns:
+                        if col in row:
+                            # Sostituisci gli spazi con underscore per i parametri
+                            safe_col = col.replace(" ", "_")
+                            col_names.append(f'"{col}"')
+                            col_values.append(f":{safe_col}")
+                            param_map[safe_col] = row[col]
+
+                    insert_sql = f'INSERT INTO "{table_name}" ({", ".join(col_names)}) VALUES ({", ".join(col_values)})'
+                    print(insert_sql)
+                    print(param_map)
+                    db.session.execute(text(insert_sql), param_map)
+            db.session.commit()
+            return {'message': 'Data populated successfully'}
+        except Exception as e:
+            db.session.rollback()
+            print("Error populating data:", e)
+            return {'error': str(e)}

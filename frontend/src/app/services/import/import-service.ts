@@ -10,10 +10,11 @@ export class ImportService {
   readonly api = inject(ApiWrapper);
   readonly baseImportUrl = `${environment.apiUrl}/import`;
 
-  async importFile(tableId: number, file: File): Promise<void> {
+  async importFile(tableId: number, file: File, skipRows: number): Promise<void> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('tableId', tableId.toString());
+    formData.append('header_row', skipRows.toString());
 
     try {
       await firstValueFrom(this.api.post<void>(`${this.baseImportUrl}/xlsx`, formData, {}, true));

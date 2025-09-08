@@ -4,7 +4,6 @@ from flask import g
 from flask_restx import Namespace, fields, Resource
 from models.column import Column
 from models.table import Table
-from models.dbConnector import db
 
 api = Namespace('table', description='Table operations')
 

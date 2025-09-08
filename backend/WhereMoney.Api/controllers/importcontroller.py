@@ -3,10 +3,10 @@ from flask_restx import Namespace, Resource, fields
 from werkzeug.datastructures import FileStorage
 import pandas as pd
 import os
-import json
 from datetime import datetime, date
 import numpy as np
 import warnings
+from models.table import Table
 
 # Suppress openpyxl warnings about print areas and other Excel-specific features
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
@@ -32,7 +32,7 @@ upload_parser = api.parser()
 upload_parser.add_argument('file', location='files', type=FileStorage, required=True, help='XLSX file to upload')
 upload_parser.add_argument('header_row', location='form', type=int, required=False, default=0, help='Row index to use as header (0-based)')
 upload_parser.add_argument('start_row', location='form', type=int, required=False, default=None, help='Row index to start reading data from (0-based). If not specified, will start from header_row + 1')
-
+upload_parser.add_argument('tableId', location='form', type=int, required=True, help='ID of the table to import data into')
 
 @api.route('/xlsx')
 class XLSXUpload(Resource):
@@ -52,12 +52,10 @@ class XLSXUpload(Resource):
             if not file.filename.lower().endswith('.xlsx'):
                 return {'error': 'Only XLSX files are allowed'}, 400
 
-            # Create uploads directory if it doesn't exist
             upload_dir = 'uploads'
             if not os.path.exists(upload_dir):
                 os.makedirs(upload_dir)
 
-            # Save file temporarily
             if hasattr(g, 'current_user') and isinstance(g.current_user, dict) and 'user_id' in g.current_user:
                 filename = f"{g.current_user['user_id']}_{file.filename}"
             else:
@@ -65,9 +63,7 @@ class XLSXUpload(Resource):
             filepath = os.path.join(upload_dir, filename)
             file.save(filepath)
 
-            # Read and process the XLSX file
             try:
-                # Read all sheets
                 excel_file = pd.ExcelFile(filepath)
                 sheets_data = {}
 
@@ -75,20 +71,17 @@ class XLSXUpload(Resource):
                 header_row = int(request.form.get('header_row', 0))
 
                 for sheet_name in excel_file.sheet_names:
-                    # Read Excel with specified header row
                     df = pd.read_excel(filepath, sheet_name=sheet_name, header=header_row)
 
-                    # Convert datetime columns to string format for JSON serialization
+                    print(header_row)
                     for col in df.columns:
                         if df[col].dtype == 'datetime64[ns]':
                             df[col] = df[col].dt.strftime('%Y-%m-%d %H:%M:%S')
                         elif pd.api.types.is_datetime64_any_dtype(df[col]):
                             df[col] = df[col].astype(str)
 
-                    # Handle NaN values that also cause JSON serialization issues
                     df = df.fillna('')
 
-                    # Convert DataFrame to dict for JSON response
                     sheets_data[sheet_name] = {
                         'columns': df.columns.tolist(),
                         'rows_count': len(df),
@@ -97,6 +90,12 @@ class XLSXUpload(Resource):
 
                 # Clean up - remove temporary file
                 os.remove(filepath)
+
+                table = Table.query.filter_by(id=request.form.get('tableId')).first()
+                if not table:
+                    return {'error': 'Table not found'}, 404
+
+                table.populate_from_sheets(sheets_data)
 
                 return {
                     'message': 'File uploaded and processed successfully',

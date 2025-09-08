@@ -10,6 +10,9 @@ import { Flex } from '../../ui/flex/flex';
 import { TableService } from '../../services/table/table-service';
 import { Table } from '../../models/table';
 import { ImportService } from '../../services/import/import-service';
+import { MatInput } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-import-component',
@@ -22,6 +25,8 @@ import { ImportService } from '../../services/import/import-service';
     MatButtonModule,
     ReactiveFormsModule,
     Flex,
+    MatInput,
+    MatTooltipModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './import-component.html',
@@ -34,6 +39,7 @@ export class ImportComponent implements OnInit {
 
   form = this.fb.group({
     table: [null, Validators.required],
+    skipRows: [0, [Validators.min(0)]],
     file: [null as File | null, Validators.required],
   });
 
@@ -68,15 +74,15 @@ export class ImportComponent implements OnInit {
 
     const table = this.form.get('table')?.value as number | null;
     const file = this.form.get('file')?.value as File | null;
+    const skipRows = this.form.get('skipRows')?.value as number | null;
 
-    this.submit(file!, table!);
+    this.submit(file!, table!, skipRows!);
   }
 
   // Updated submit signature to accept a single File (or null)
-  async submit(file: File, tableId: number): Promise<void> {
-    console.log('submit', { fileName: file?.name ?? null, tableId });
+  async submit(file: File, tableId: number, skipRows: number): Promise<void> {
 
-    await this.importService.importFile(tableId, file)
+    await this.importService.importFile(tableId, file, skipRows);
   }
 
   reset(): void {
