@@ -6,7 +6,7 @@ export interface Column {
   id?: number;
   tableId: number;
   name: string;
-  type: ColumnType;
+  data_type: ColumnType;
 }
 
 export const isColumnType = (v: unknown): v is ColumnType =>

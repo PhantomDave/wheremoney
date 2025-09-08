@@ -1,0 +1,12 @@
+<div
+  [class]="containerClass"
+  [class.app-flex--gap-numeric]="isNumericGap"
+  [attr.data-direction]="direction"
+  [style.display]="inline ? 'inline-flex' : 'flex'"
+  [style.gap]="!isNumericGap ? gap : null"
+  [style.--gap-px]="isNumericGap ? gap + 'px' : null"
+  [style.justify-content]="justify"
+  [style.align-items]="align"
+>
+  <ng-content></ng-content>
+</div>

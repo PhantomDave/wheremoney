@@ -3,10 +3,12 @@ import { TableService } from '../../services/table/table-service';
 import { Table } from '../../models/table';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-table-detail-component',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatButton, MatListModule],
   templateUrl: './table-detail-component.html',
   styleUrls: ['./table-detail-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,12 +17,8 @@ export class TableDetailComponent implements OnInit {
   private readonly tableService = inject(TableService);
   private readonly route = inject(ActivatedRoute);
 
-  readonly selectedTable = this.tableService.selectedTable;
   readonly loading = this.tableService.loading;
   readonly error = this.tableService.error;
-
-  readonly hasTable = computed(() => this.selectedTable() !== null);
-  readonly tableTitle = computed(() => this.selectedTable()?.name || 'No table selected');
 
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -30,6 +28,11 @@ export class TableDetailComponent implements OnInit {
         this.tableService.getTableById(tableId);
       }
     });
+  }
+
+  get table(): Table | null {
+    console.log('Selected table:', this.tableService.selectedTable());
+    return this.tableService.selectedTable();
   }
 
   onClearError() {

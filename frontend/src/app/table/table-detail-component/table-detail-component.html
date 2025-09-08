@@ -6,7 +6,6 @@
     </div>
   }
 
-  <!-- Error state using signal -->
   @if (error()) {
     <div class="error-message">
       <p>{{ error() }}</p>
@@ -16,37 +15,38 @@
     </div>
   }
 
-  <!-- Table content using computed signals -->
-  @if (hasTable() && !loading()) {
+  @if (table && !loading()) {
     <div class="table-content">
       <header class="table-header">
-        <h1>{{ tableTitle() }}</h1>
-        <button routerLink="/table" class="btn-secondary">
-          Clear Selection
+        <h1>{{ table.name }}</h1>
+        <button mat-flat-button routerLink="/table" class="btn-secondary">
+          Back
         </button>
       </header>
 
       <div class="table-info">
         <div class="info-row">
           <label>Table ID:</label>
-          <span>{{ selectedTable()?.id }}</span>
+          <span>{{ table.id }}</span>
         </div>
 
         <div class="info-row">
           <label>Table Name:</label>
-          <span>{{ selectedTable()?.name }}</span>
+          <span>{{ table.name }}</span>
         </div>
 
-        @if (selectedTable()?.columns && selectedTable()?.columns!.length > 0) {
+        @if (table.columns && table.columns.length > 0) {
           <div class="columns-section">
             <h3>Columns</h3>
             <div class="columns-list">
-              @for (column of selectedTable()?.columns; track column.id) {
-                <div class="column-item">
-                  <span class="column-name">{{ column.name }}</span>
-                  <span class="column-type">{{ column.type }}</span>
-                </div>
-              }
+              <mat-list>
+                @for (column of table.columns; track column.id) {
+                  <mat-list-item>
+                    <span matListItemTitle>{{ column.name }} </span>
+                    <span matListItemLine>{{ column.data_type }}</span>
+                  </mat-list-item>
+                }
+              </mat-list>
             </div>
           </div>
         }
@@ -54,7 +54,7 @@
     </div>
   }
 
-  @if (!hasTable() && !loading() && !error()) {
+  @if (!table && !loading() && !error()) {
     <div class="no-table-message">
       <p>No table selected. Please select a table to view details.</p>
     </div>

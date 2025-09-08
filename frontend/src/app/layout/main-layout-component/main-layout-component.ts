@@ -8,9 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AccountService } from '../../services/profile/account-service';
 import { CookieService } from 'ngx-cookie-service';
+import { Breadcrumb } from '../breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-main-layout-component',
@@ -26,6 +27,8 @@ import { CookieService } from 'ngx-cookie-service';
     MatSlideToggleModule,
     FormsModule,
     RouterOutlet,
+    RouterLink,
+    Breadcrumb,
   ],
   templateUrl: './main-layout-component.html',
   styleUrls: ['./main-layout-component.css'],
@@ -40,28 +43,17 @@ export class MainLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Initialize theme from localStorage, otherwise use prefers-color-scheme
     const stored = localStorage.getItem('wheremoney-theme');
     if (stored) {
       this.isDark = stored === 'dark';
     } else {
       this.isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-    this.applyTheme();
   }
 
   toggleTheme(): void {
     this.isDark = !this.isDark;
-    localStorage.setItem('wheremoney-theme', this.isDark ? 'dark' : 'light');
-    this.applyTheme();
-  }
-
-  private applyTheme(): void {
-    if (this.isDark) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
-    }
+    document.body.style.setProperty('color-scheme', this.isDark ? 'dark' : 'light');
   }
 
   isLoggedIn(): boolean {

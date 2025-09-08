@@ -1,11 +1,23 @@
-<mat-nav-list>
+<app-flex direction="row" gap="8" align="center" justify="space-between" class="px-2 py-1">
   <h3 mat-subheader>Tables</h3>
-  @if (!loading) {
+  <button mat-flat-button class="btn-secondary" routerLink="/table/create">
+    <mat-icon fontIcon="add"></mat-icon>
+    Create Table
+  </button>
+</app-flex>
+@if (!loading) {
+  <mat-list>
     @for (table of tables; track table.id) {
-      <button mat-list-item (click)="openTable(table?.id!)">{{ table.name }}</button>
+      <mat-list-item>
+        <span class="interactable" matListItemTitle routerLink="/table/{{table?.id}}">{{ table.name }} </span>
+        <span matListItemLine>Second line will be a good description later</span>
+        <app-flex matListItemMeta direction="row" gap="4" align="center">
+            <mat-icon fontIcon="delete" (click)="onDeleteTable(table.id)" class="interactable"></mat-icon>
+        </app-flex>
+      </mat-list-item>
     }
-  } @else {
-    <mat-spinner></mat-spinner>
-  }
-</mat-nav-list>
+  </mat-list>
+} @else {
+  <mat-spinner></mat-spinner>
+}
 

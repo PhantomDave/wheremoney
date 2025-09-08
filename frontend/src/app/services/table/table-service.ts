@@ -90,6 +90,27 @@ export class TableService {
     }
   }
 
+  public async deleteTable(id: number): Promise<void> {
+    this._loading.set(true);
+    this._error.set(null);
+
+    try {
+      await firstValueFrom(this.api.delete<void>(`${this.baseTableUrl}/${id}`, {}, true));
+
+      this._tables.update((tables) => tables?.filter((table) => table.id !== id));
+      if (this._selectedTable()?.id === id) {
+        this._selectedTable.set(null);
+      }
+    } catch (error) {
+      const apiError = error as any;
+      const errorMessage =
+        apiError?.error?.message || apiError?.message || 'Failed to delete table';
+      this._error.set(errorMessage);
+    } finally {
+      this._loading.set(false);
+    }
+  }
+
   public selectTable(table: Table | null): void {
     this._selectedTable.set(table);
   }

@@ -11,7 +11,6 @@ export class ApiWrapper {
   constructor(
     private readonly http: HttpClient,
     private readonly cookieService: CookieService,
-    private readonly router: Router,
   ) {}
 
   get<T>(url: string, options?: any, withCredentials?: boolean) {

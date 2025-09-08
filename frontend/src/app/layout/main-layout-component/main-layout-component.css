@@ -55,12 +55,12 @@
 }
 
 .nav-item:hover {
-  background-color: var(--mat-sys-primary-container) !important;
-  color: var(--mat-sys-on-primary-container) !important;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
 }
 
 .nav-item:hover mat-icon {
-  color: var(--mat-sys-on-primary-container) !important;
+  color: var(--mat-sys-on-primary-container);
 }
 
 .nav-item mat-icon {
