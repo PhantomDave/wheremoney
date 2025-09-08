@@ -7,7 +7,6 @@ def public_endpoint(f):
     return f
 
 def generate_token(user_id, username=None):
-    """Generate a JWT token for a user"""
     payload = {
         'user_id': user_id,
         'username': username,
@@ -21,6 +20,9 @@ def verify_token(token):
     try:
         key = current_app.config.get('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
         payload = jwt.decode(token, key, algorithms=['HS256'])
+        print(payload)
+
+
         return payload
     except jwt.ExpiredSignatureError:
         return None
@@ -57,19 +59,11 @@ def authenticate():
         if view_func and getattr(view_func, '_is_public', False):
             return None
 
-    # Require authentication for non-public endpoints
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({'message': 'Authorization header is required'}), 401
-    
-    try:
-        token = auth_header.split(' ')[1]
-    except IndexError:
-        return jsonify({'message': 'Invalid authorization header format. Use: Bearer <token>'}), 401
-    
+    token = request.headers.get('Bearer') or request.headers.get('Authorization') or request.headers.get('bearer')
+
     payload = verify_token(token)
     if not payload:
         return jsonify({'message': 'Invalid or expired token'}), 401
     
-    g.current_user = payload
+    g.current_user = payload['user_id']
     return None
