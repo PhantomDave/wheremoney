@@ -86,15 +86,12 @@ class Table(db.Model):
                     param_map = {}
                     for col in columns:
                         if col in row:
-                            # Sostituisci gli spazi con underscore per i parametri
                             safe_col = col.replace(" ", "_")
                             col_names.append(f'"{col}"')
                             col_values.append(f":{safe_col}")
                             param_map[safe_col] = row[col]
 
                     insert_sql = f'INSERT INTO "{table_name}" ({", ".join(col_names)}) VALUES ({", ".join(col_values)})'
-                    print(insert_sql)
-                    print(param_map)
                     db.session.execute(text(insert_sql), param_map)
             db.session.commit()
             return {'message': 'Data populated successfully'}
