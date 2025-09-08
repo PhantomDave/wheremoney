@@ -3,7 +3,7 @@
     <div class="auth-header">
       <h2>Create account</h2>
     </div>
-    @if (this.loading() === false) {
+    @if (!this.loading()) {
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-body">
         <mat-form-field appearance="outline" class="full-width form-field-full">
           <mat-label>Email</mat-label>

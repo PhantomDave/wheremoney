@@ -1,4 +1,4 @@
-import { HttpInterceptorFn, HttpClient } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';

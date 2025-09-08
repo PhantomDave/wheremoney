@@ -4,7 +4,7 @@
       <h2>Login</h2>
     </div>
 
-    @if (this.loading() === false) {
+    @if (!this.loading()) {
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-body">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
