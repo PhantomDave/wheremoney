@@ -19,3 +19,12 @@ class Column(db.Model):
             'data_type': self.data_type,
             'table_id': self.table_id,
         }
+
+    def getdatabasetype(self):
+        type_mapping = {
+            'string': 'TEXT',
+            'integer': 'INTEGER',
+            'float': 'FLOAT',
+            'date': 'DATE',
+        }
+        return type_mapping.get(self.data_type, 'VARCHAR(255)')

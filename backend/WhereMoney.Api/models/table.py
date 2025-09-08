@@ -1,3 +1,5 @@
+from sqlalchemy import text
+
 from models.column import Column
 from models.dbConnector import db
 import bcrypt
@@ -45,3 +47,19 @@ class Table(db.Model):
         db.session.delete(self)
         db.session.commit()
         return {'message': 'Table deleted successfully'}
+
+    def createdatabasetable(self):
+        column_definitions = []
+        for column in self.columns:
+            col_def = f"{column.name} {column.getdatabasetype()}"
+            column_definitions.append(col_def)
+        columns_sql = ", ".join(column_definitions)
+        create_table_sql = f"CREATE TABLE {self.name}_{self.owner_id} (id SERIAL PRIMARY KEY, {columns_sql});"
+        try:
+            db.session.execute(text(create_table_sql))
+            db.session.commit()
+            return {'message': f'Table {self.name} created successfully in the database'}
+        except Exception as e:
+            db.session.rollback()
+            print("Error creating table:", e)
+            return {'error': str(e)}

@@ -51,6 +51,7 @@ class TableGet(Resource):
         if not isinstance(table, Table):
             api.abort(400, table.get('error', 'One or more fields are invalid'))
 
+        table.createdatabasetable()
         return table.serialize(), 201
 
 @api.route('/<int:id>')
