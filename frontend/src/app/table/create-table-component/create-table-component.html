@@ -52,10 +52,10 @@
               matTooltipPosition="right"
               matTooltipShowDelay="2000"
             >
-              <mat-label>Header name row</mat-label>
+              <mat-label>Header {{ i + 1 }} name</mat-label>
               <input matInput type="text" formControlName="header" placeholder="e.g. email" />
               @if (columns.at(i).get('header')?.hasError('required')) {
-                <mat-error>Header name is required</mat-error>
+                <mat-error>Header {{ i + 1 }} name is required</mat-error>
               }
             </mat-form-field>
 
