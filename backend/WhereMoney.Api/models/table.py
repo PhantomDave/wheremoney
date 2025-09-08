@@ -99,3 +99,14 @@ class Table(db.Model):
             db.session.rollback()
             print("Error populating data:", e)
             return {'error': str(e)}
+
+    def getdata(self):
+        try:
+            table_name = f"{self.name}_{self.owner_id}"
+            select_sql = f'SELECT * FROM "{table_name}"'
+            result = db.session.execute(text(select_sql))
+            rows = [dict(row) for row in result]
+            return rows
+        except Exception as e:
+            print("Error retrieving data:", e)
+            return {'error': str(e)}

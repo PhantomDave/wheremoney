@@ -52,6 +52,8 @@ from controllers.importcontroller import api as import_ns
 api.add_namespace(import_ns)
 from controllers.tablecontroller import api as table_ns
 api.add_namespace(table_ns)
+from controllers.datacontroller import api as data_ns
+api.add_namespace(data_ns)
 
 app.before_request(authenticate)
 
