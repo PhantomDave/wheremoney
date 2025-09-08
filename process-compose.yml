@@ -1,0 +1,11 @@
+processes:
+  containers:
+    command: docker compose up pgadmin db -dd
+  webapp:
+    command: docker compose up webapp --build --watch
+    depends_on:
+      containers: {}
+  app:
+    command: docker compose up app --build --watch
+    depends_on:
+      containers: {}

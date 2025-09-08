@@ -20,8 +20,6 @@ def verify_token(token):
     try:
         key = current_app.config.get('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
         payload = jwt.decode(token, key, algorithms=['HS256'])
-        print(payload)
-
 
         return payload
     except jwt.ExpiredSignatureError:
@@ -59,7 +57,11 @@ def authenticate():
         if view_func and getattr(view_func, '_is_public', False):
             return None
 
-    token = request.headers.get('Bearer') or request.headers.get('Authorization') or request.headers.get('bearer')
+    token = request.headers.get('Authorization')
+    if token and token.startswith('Bearer '):
+        token = token[7:]
+    else:
+        token = request.headers.get('Bearer') or request.headers.get('Authorization') or request.headers.get('bearer')
 
     payload = verify_token(token)
     if not payload:

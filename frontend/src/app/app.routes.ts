@@ -9,26 +9,50 @@ import { TableDetailComponent } from './table/table-detail-component/table-detai
 import { NotFoundComponent } from './utils/not-found-component/not-found-component';
 import { TablesListComponent } from './table/tables-list-component/tables-list-component';
 import { tableResolverResolver } from './resolvers/table-resolver-resolver';
+import { ImportComponent } from './import/import-component/import-component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'account/login' },
   {
     path: 'account',
     canActivate: [anonymousGuardGuard],
+    data: { breadcrumb: 'Account' },
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
+      { path: 'login', component: LoginComponent, data: { breadcrumb: 'Login' } },
+      { path: 'register', component: RegisterComponent, data: { breadcrumb: 'Registration' } },
     ],
   },
-  { path: 'table', canActivate: [loggedGuardGuard], component: TablesListComponent },
-  { path: 'table/create', canActivate: [loggedGuardGuard], component: CreateTableComponent },
+  {
+    path: 'table',
+    canActivate: [loggedGuardGuard],
+    component: TablesListComponent,
+    data: { breadcrumb: 'Tables' },
+  },
+  {
+    path: 'table/create',
+    canActivate: [loggedGuardGuard],
+    component: CreateTableComponent,
+    data: { breadcrumb: 'Create Table' },
+  },
   {
     path: 'table/:id',
     canActivate: [loggedGuardGuard],
     component: TableDetailComponent,
     resolve: { table: tableResolverResolver },
+    data: { breadcrumb: 'Table Detail' },
   },
-  { path: 'home', component: HomeComponent, canActivate: [loggedGuardGuard] },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Home' },
+  },
+  {
+    path: 'import',
+    component: ImportComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Import Data' },
+  },
+  { path: '404', component: NotFoundComponent, data: { breadcrumb: '404' } },
   { path: '**', redirectTo: '404' },
-  { path: '404', component: NotFoundComponent },
 ];

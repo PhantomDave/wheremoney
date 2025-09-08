@@ -1,0 +1,38 @@
+<app-flex justify="center" align="center">
+
+<form class="import-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-card>
+    <mat-card-title>Import data</mat-card-title>
+
+    <mat-card-content>
+      <div class="import-grid">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Select destination</mat-label>
+          <mat-select formControlName="table">
+            @for(table of tables(); track table.id) {
+              <mat-option [value]="table.id">{{ table.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="file-control">
+          <label class="file-label mat-raised-button">
+            <mat-icon aria-hidden="true">upload</mat-icon>
+            Choose file
+            <input #importFile type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" hidden (change)="onFileChange($event)" />
+          </label>
+          <div class="file-hint">
+            <small>Add a .csv or .xlsx file</small>
+            <div class="selected-file" aria-live="polite">{{ selectedFileName() }}</div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Upload</button>
+      <button mat-button type="button" (click)="reset()">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+</app-flex>

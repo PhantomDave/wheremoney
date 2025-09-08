@@ -10,7 +10,9 @@ import { firstValueFrom } from 'rxjs';
 export class TableService {
   private readonly baseTableUrl = `${environment.apiUrl}/table`;
 
-  private readonly _tables = signal<Table[] | undefined>(undefined);
+  // Signals: prefer initializing collections as empty arrays to avoid undefined checks in components
+  // Expose read-only signals to consumers via asReadonly() to prevent external mutation
+  private readonly _tables = signal<Table[]>([]);
   private readonly _selectedTable = signal<Table | null>(null);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
@@ -31,11 +33,10 @@ export class TableService {
         this.api.post<Table>(`${this.baseTableUrl}/`, table, {}, true),
       );
 
-      if (this._tables()) {
-        this._tables.update((tables) => (tables ? [...tables, response] : [response]));
-      } else {
-        this._tables.set([response]);
-      }
+      // Use update to keep state transformations pure. Since _tables is always an array
+      // we don't need to check for undefined — update receives the current array and
+      // returns a new array (immutable pattern): good for change detection.
+      this._tables.update((tables) => [...tables, response]);
 
       this._selectedTable.set(response);
 

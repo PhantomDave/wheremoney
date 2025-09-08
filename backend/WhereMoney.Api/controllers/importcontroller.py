@@ -58,7 +58,10 @@ class XLSXUpload(Resource):
                 os.makedirs(upload_dir)
 
             # Save file temporarily
-            filename = f"{g.current_user['user_id']}_{file.filename}" if hasattr(g, 'current_user') and g.current_user else file.filename
+            if hasattr(g, 'current_user') and isinstance(g.current_user, dict) and 'user_id' in g.current_user:
+                filename = f"{g.current_user['user_id']}_{file.filename}"
+            else:
+                filename = file.filename
             filepath = os.path.join(upload_dir, filename)
             file.save(filepath)
 
@@ -106,7 +109,9 @@ class XLSXUpload(Resource):
                 # Clean up file if processing fails
                 if os.path.exists(filepath):
                     os.remove(filepath)
+                print(e)
                 return {'error': f'Error processing XLSX file: {str(e)}'}, 400
 
         except Exception as e:
+            print(e)
             return {'error': f'Upload failed: {str(e)}'}, 500

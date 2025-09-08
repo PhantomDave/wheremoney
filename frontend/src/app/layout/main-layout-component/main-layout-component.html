@@ -13,6 +13,10 @@
           <mat-icon matListItemIcon>table_chart</mat-icon>
           <span matListItemTitle>Table</span>
         </a>
+        <a mat-list-item routerLink="/import" class="nav-item">
+          <mat-icon matListItemIcon>cloud_upload</mat-icon>
+          <span matListItemTitle>Import</span>
+        </a>
         <a mat-list-item href="#" class="nav-item">
           <mat-icon matListItemIcon>settings</mat-icon>
           <span matListItemTitle>Settings</span>
@@ -36,7 +40,7 @@
         <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
           <mat-icon>{{sidenav.opened ? "keyboard_double_arrow_left" : "keyboard_double_arrow_right" }}</mat-icon>
         </button>
-        <app-breadcrumb/>
+
       </div>
       <div class="content-body">
         <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TableService } from '../../services/table/table-service';
 import { Table } from '../../models/table';
 import { CommonModule } from '@angular/common';
@@ -31,7 +31,6 @@ export class TableDetailComponent implements OnInit {
   }
 
   get table(): Table | null {
-    console.log('Selected table:', this.tableService.selectedTable());
     return this.tableService.selectedTable();
   }
 
