@@ -97,7 +97,10 @@ class XLSXUpload(Resource):
                 if not table:
                     return {'error': 'Table not found'}, 404
 
-                table.populate_from_sheets(sheets_data)
+                puplateresp = table.populate_from_sheets(sheets_data)
+
+                if puplateresp.get("error"):
+                    return api.abort(puplateresp.get("error"))
 
                 return {
                     'message': 'File uploaded and processed successfully',

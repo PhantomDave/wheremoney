@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TableService } from '../../services/table/table-service';
-import { COLUMN_TYPES } from '../../models/column';
-import { Table } from '../../models/table';
+import { TableService } from '../../../services/table/table-service';
+import { COLUMN_TYPES } from '../../../models/column';
+import { Table } from '../../../models/table';
 import { Router } from '@angular/router';
 
 @Component({

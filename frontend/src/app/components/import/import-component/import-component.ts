@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, Signal, ChangeDetectionStrategy, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  Signal,
+  ChangeDetectionStrategy,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,12 +15,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Flex } from '../../ui/flex/flex';
-import { TableService } from '../../services/table/table-service';
-import { Table } from '../../models/table';
-import { ImportService } from '../../services/import/import-service';
+import { TableService } from '../../../services/table/table-service';
+import { Table } from '../../../models/table';
+import { ImportService } from '../../../services/import/import-service';
 import { MatInput } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
 
 @Component({
   selector: 'app-import-component',
@@ -81,7 +88,6 @@ export class ImportComponent implements OnInit {
 
   // Updated submit signature to accept a single File (or null)
   async submit(file: File, tableId: number, skipRows: number): Promise<void> {
-
     await this.importService.importFile(tableId, file, skipRows);
   }
 

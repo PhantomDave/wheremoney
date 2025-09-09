@@ -14,8 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
-import { Account } from '../../models/account';
-import { AccountService } from '../../services/profile/account-service';
+import { Account } from '../../../models/account';
+import { AccountService } from '../../../services/profile/account-service';
 
 @Component({
   selector: 'app-register',

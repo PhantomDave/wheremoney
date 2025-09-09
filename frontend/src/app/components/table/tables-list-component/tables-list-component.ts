@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { TableService } from '../../services/table/table-service';
+import { TableService } from '../../../services/table/table-service';
 import { Router, RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -30,9 +30,7 @@ export class TablesListComponent {
   }
 
   async ngOnInit() {
-    if (!this.tables) {
-      await this.tableService.getAllUserTables();
-    }
+    await this.tableService.getAllUserTables();
   }
 
   async onDeleteTable(id: number | undefined) {

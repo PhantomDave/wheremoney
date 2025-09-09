@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { TableService } from '../../services/table/table-service';
-import { Table } from '../../models/table';
+import { TableService } from '../../../services/table/table-service';
+import { Table } from '../../../models/table';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
