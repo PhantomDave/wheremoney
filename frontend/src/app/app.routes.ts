@@ -59,13 +59,15 @@ export const routes: Routes = [
     path: 'data',
     component: DataSelectionComponent,
     canActivate: [loggedGuardGuard],
-    data: { breadcrumb: 'Data Details' },
-  },
-  {
-    path: 'data/:id',
-    component: DataDetailsComponent,
-    canActivate: [loggedGuardGuard],
-    data: { breadcrumb: 'Data Details' },
+    data: { breadcrumb: 'Data List' },
+    children: [
+      {
+        path: ':id',
+        component: DataDetailsComponent,
+        canActivate: [loggedGuardGuard],
+        data: { breadcrumb: 'Data Details' },
+      },
+    ],
   },
   { path: '404', component: NotFoundComponent, data: { breadcrumb: '404' } },
   { path: '**', redirectTo: '404' },

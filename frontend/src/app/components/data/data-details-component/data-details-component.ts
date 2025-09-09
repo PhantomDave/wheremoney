@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../services/data/data-service';
-import { TableService } from '../../../services/table/table-service';
 import { Table } from '../../../models/table';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Column } from '../../../models/column';
+import { TableService } from '../../../services/table/table-service';
 
 @Component({
   selector: 'app-data-details-component',
@@ -17,6 +17,8 @@ export class DataDetailsComponent implements OnInit {
   private dataService = inject(DataService);
   private tableService = inject(TableService);
   private route = inject(ActivatedRoute);
+
+  @Input() table: Table | null = null;
 
   // Compute the table data source on demand. The DataService stores either
   // an array directly or an object with a `data` property (used by mocks).
@@ -32,20 +34,20 @@ export class DataDetailsComponent implements OnInit {
     }
     return [];
   }
-  // start empty so the table doesn't try to render a blank column while data loads
   displayedColumns: string[] = [];
 
   async ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
-      const id = params.get('id');
-      if (id) {
-        const tableId = parseInt(id, 10);
-        await this.tableService.getTableById(tableId);
-        await this.dataService.getDataByTableId(tableId);
+      await this.dataService.getDataByTableId(this.table?.id!);
+      let selected = this.table;
+      if (!selected) {
+        let id = params.get('id');
+        const tableId = parseInt(id!, 10);
+        if (id) {
+          await this.tableService.getTableById(tableId);
+          selected = this.tableService.selectedTable();
+        }
       }
-
-      console.table(this.dataSource);
-      const selected = this.tableService.selectedTable();
       if (selected && Array.isArray(selected.columns)) {
         this.displayedColumns = selected.columns
           .map((col: Column) => (col.id != null ? String(col.id) : ''))
@@ -53,15 +55,8 @@ export class DataDetailsComponent implements OnInit {
       } else {
         this.displayedColumns = [];
       }
-      console.log(this.displayedColumns);
     });
   }
-
-  get table(): Table {
-    return this.tableService.selectedTable()!;
-  }
-
-  // If you need table columns later you can read them from `table.columns`.
 
   // Keep the raw service value accessible. We avoid `any` on this getter to
   // encourage runtime checks where the shape is uncertain.

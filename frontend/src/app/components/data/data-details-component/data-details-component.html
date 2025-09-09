@@ -3,7 +3,7 @@
   <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
-  @for (column of table.columns; track column.id) {
+  @for (column of table?.columns; track column.id) {
     <ng-container [matColumnDef]="column.id?.toString() ?? ''">
       <th mat-header-cell *matHeaderCellDef> {{ column.name }} </th>
       <td mat-cell *matCellDef="let element"> {{ getCellValue(element, column.name.replaceAll("_", " ")) }} </td>

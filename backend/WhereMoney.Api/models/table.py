@@ -108,6 +108,7 @@ class Table(db.Model):
 
     def getdata(self):
         try:
+            
             safe_name = sanitize_identifier(self.name.replace(" ", "_"))
             safe_owner_id = str(self.owner_id)
             table_name = f"{safe_name}_{safe_owner_id}"

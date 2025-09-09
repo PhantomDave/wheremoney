@@ -1,1 +1,12 @@
-<p>data-selection-component works!</p>
+<mat-form-field>
+  <mat-label>Select Table</mat-label>
+  <mat-select (selectionChange)="onSelectionChange($event.value)">
+    @for (table of tables; track table.id) {
+      <mat-option [value]="table.id">{{table.name}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+@if (selectedTable) {
+  <app-data-details-component [table]="selectedTable"></app-data-details-component>
+}
