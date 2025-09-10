@@ -3,6 +3,7 @@ import { ApiWrapper } from '../api-wrapper';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../../models/api-error';
 import { environment } from '../../../environments/environment';
+import { Data } from '../../models/data';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,10 @@ import { environment } from '../../../environments/environment';
 export class DataService {
   readonly api = inject(ApiWrapper);
 
-  private readonly _data = signal<unknown[]>([]);
+  private readonly _data = signal<Data>({
+    columns: [],
+    data: [],
+  });
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
@@ -24,14 +28,10 @@ export class DataService {
 
     try {
       const response = await firstValueFrom(
-        this.api.get<unknown>(`${environment.apiUrl}/data/${tableId}`, {}, true),
+        this.api.get<Data>(`${environment.apiUrl}/data/${tableId}`, {}, true),
       );
       if (response) {
-        if (Array.isArray(response)) {
-          this._data.set(response);
-        } else {
-          this._data.set([]);
-        }
+        this._data.set(response);
       }
     } catch (error) {
       const apiError = error as ApiError;

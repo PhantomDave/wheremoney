@@ -86,8 +86,12 @@ export class DataDetailsComponent implements OnInit, AfterViewInit {
     if (Array.isArray(raw)) {
       return raw;
     }
-    if (raw && typeof raw === 'object' && Array.isArray((raw as Record<string, unknown>)['data'])) {
-      return (raw as Record<string, unknown>)['data'] as unknown[];
+    if (
+      raw &&
+      typeof raw === 'object' &&
+      Array.isArray((raw as unknown as Record<string, unknown>)['data'])
+    ) {
+      return (raw as unknown as Record<string, unknown>)['data'] as unknown[];
     }
     return [];
   }

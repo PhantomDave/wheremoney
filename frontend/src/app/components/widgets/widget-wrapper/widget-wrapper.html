@@ -1,0 +1,25 @@
+<app-flex
+  [direction]="'row'"
+  [align]="'center'"
+  [justify]="'space-between'"
+  [gap]="'16px'"
+  [className]="'widget-wrapper'"
+>
+  <mat-form-field>
+    <mat-label>Select Table</mat-label>
+    <mat-select (selectionChange)="onSelectionChange($event.value)">
+      @for (table of tables; track table.id) {
+        <mat-option [value]="table.id">{{ table.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (selectedTable()) {
+    <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
+  }
+</app-flex>
+@if (selectedTable()) {
+  <app-flex [direction]="'column'" [align]="'center'" [justify]="'center'" [gap]="'16px'">
+    <ng-content></ng-content>
+  </app-flex>
+}

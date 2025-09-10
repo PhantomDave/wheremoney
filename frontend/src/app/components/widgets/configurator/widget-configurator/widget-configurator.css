@@ -1,0 +1,25 @@
+.column-selection {
+  display: flex;
+  flex-direction: column;
+}
+
+.column-selection mat-checkbox {
+  margin: 4px 0;
+}
+
+
+.column-selection mat-checkbox:first-child {
+  font-weight: 500;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+mat-dialog-content {
+  min-width: 400px;
+}
+
+mat-dialog-actions {
+  justify-content: flex-end;
+  gap: 8px;
+}
