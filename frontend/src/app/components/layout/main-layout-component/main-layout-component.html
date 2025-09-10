@@ -26,12 +26,12 @@
           <span matListItemTitle>Settings</span>
         </a>
         <div class="bottom-nav">
-          <a mat-list-item (click)="logout()" class="nav-item">
+          <a mat-list-item (click)="logout()" class="nav-item" tabindex="0" (keyup.enter)="logout()">
             <mat-icon matListItemIcon>account_circle</mat-icon>
             <span matListItemTitle>Logout</span>
           </a>
 
-          <a mat-list-item role="button" class="nav-item" (click)="toggleTheme()">
+          <a mat-list-item role="button" class="nav-item" (click)="toggleTheme()" tabindex="0" (keyup.enter)="toggleTheme()">
             <mat-icon matListItemIcon>{{ isDark ? 'dark_mode' : 'light_mode' }}</mat-icon>
             <span matListItemTitle>{{ isDark ? 'Dark' : 'Light' }} theme</span>
           </a>

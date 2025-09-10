@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
   @for (column of table?.columns; track column.id) {
-    <ng-container [matColumnDef]="column.name?.toString() ?? ''">
+    <ng-container [matColumnDef]="column.name.toString()">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by {{column.name}}">
         {{ column.name }}
       </th>

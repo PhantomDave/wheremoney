@@ -1,11 +1,10 @@
-import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ResolveFn, ActivatedRouteSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
 import { TableService } from '../services/table/table-service';
 import { Table } from '../models/table';
 
 export const tableResolverResolver: ResolveFn<Table | null> = async (
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
 ) => {
   const idParam = route.paramMap.get('id');
   const id = idParam ? Number(idParam) : NaN;
@@ -16,7 +15,7 @@ export const tableResolverResolver: ResolveFn<Table | null> = async (
   try {
     await tableService.getTableById(id);
     return tableService.selectedTable();
-  } catch (error) {
+  } catch {
     return null;
   }
 };

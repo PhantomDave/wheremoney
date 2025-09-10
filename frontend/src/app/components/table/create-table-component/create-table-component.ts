@@ -8,9 +8,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TableService } from '../../../services/table/table-service';
-import { COLUMN_TYPES } from '../../../models/column';
+import { isColumnType } from '../../../models/column';
 import { Table } from '../../../models/table';
 import { Router } from '@angular/router';
+
+interface ColumnFormValue {
+  name: string;
+  type: string;
+}
 
 @Component({
   selector: 'app-create-table-component',
@@ -108,16 +113,16 @@ export class CreateTableComponent {
 
     const tableModel: Table = {
       name: this.tableForm.value.tableName,
-      columns: this.tableForm.value.columns.map((col: any) => ({
+      columns: this.tableForm.value.columns.map((col: ColumnFormValue) => ({
         name: col.name,
-        type: COLUMN_TYPES.includes(col.type) ? col.type : 'string',
+        type: isColumnType(col.type) ? col.type : 'string',
       })),
     };
 
     try {
       const response = await this.tableService.createTable(tableModel);
       await this.router.navigate(['/table/', response.id]);
-    } catch (err) {
+    } catch {
       this.cdr.detectChanges();
     }
   }
