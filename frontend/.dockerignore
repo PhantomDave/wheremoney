@@ -1,5 +1,15 @@
 node_modules
 dist
+.angular
+build
+.git
+.gitignore
+docker-compose.override.yml
+npm-debug.log
+environment.*.ts
+/.vscode
+node_modules
+dist
 build
 .git
 .gitignore

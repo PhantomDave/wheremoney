@@ -1,0 +1,29 @@
+<app-flex direction="column" align="center" justify="center" gap="16">
+  <mat-card class="create-widget-card">
+    <h2>Create Widget</h2>
+    <form [formGroup]="widgetForm" (ngSubmit)="onSubmit()">
+      <app-flex direction="column" align="center" justify="center" gap="16">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+          @if (widgetForm.get('name')?.hasError('required') && widgetForm.get('name')?.touched) {
+            <mat-error>Name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Type</mat-label>
+          <input matInput formControlName="type" />
+          @if (widgetForm.get('type')?.hasError('minlength') && widgetForm.get('type')?.touched) {
+            <mat-error>Type is required</mat-error>
+          }
+        </mat-form-field>
+      </app-flex>
+      <app-flex direction="row" gap="8" align="center" justify="end">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!widgetForm.valid">
+          Create Widget
+        </button>
+      </app-flex>
+    </form>
+  </mat-card>
+</app-flex>

@@ -25,6 +25,9 @@ CORS(app,
 # Initialize database and migrations
 db.init_app(app)
 
+# Ensure models package is imported so model classes register on db.metadata
+import models
+
 migrate = Migrate(app, db)
 
 authorizations = {
@@ -58,6 +61,8 @@ from controllers.tablecontroller import api as table_ns
 api.add_namespace(table_ns)
 from controllers.datacontroller import api as data_ns
 api.add_namespace(data_ns)
+from controllers.widgetcontroller import api as widget_ns
+api.add_namespace(widget_ns)
 
 app.before_request(authenticate)
 

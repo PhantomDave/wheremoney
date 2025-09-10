@@ -1,6 +1,6 @@
 processes:
   containers:
-    command: docker compose up pgadmin db -dd
+    command: docker compose up pgadmin db -d
   webapp:
     command: docker compose up webapp --build --watch
     depends_on:
@@ -9,3 +9,4 @@ processes:
     command: docker compose up app --build --watch
     depends_on:
       containers: {}
+    

@@ -6,12 +6,15 @@ import { loggedGuardGuard } from './guard/logged-guard-guard';
 import { HomeComponent } from './components/home/home-component/home-component';
 import { CreateTableComponent } from './components/table/create-table-component/create-table-component';
 import { TableDetailComponent } from './components/table/table-detail-component/table-detail-component';
-import { NotFoundComponent } from './utils/not-found-component/not-found-component';
+import { NotFoundComponent } from './components/utils/not-found-component/not-found-component';
 import { TablesListComponent } from './components/table/tables-list-component/tables-list-component';
 import { tableResolverResolver } from './resolvers/table-resolver-resolver';
 import { ImportComponent } from './components/import/import-component/import-component';
 import { DataDetailsComponent } from './components/data/data-details-component/data-details-component';
 import { DataSelectionComponent } from './components/data/data-selection-component/data-selection-component';
+import { ListWidgetComponent } from './components/widgets/list-widget-component/list-widget-component';
+import { WidgetDetailsComponent } from './components/widgets/widget-details-component/widget-details-component';
+import { CreateWidgetComponent } from './components/widgets/create-widget-component/create-widget-component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'account/login' },
@@ -68,6 +71,24 @@ export const routes: Routes = [
         data: { breadcrumb: 'Data Details' },
       },
     ],
+  },
+  {
+    path: 'widget',
+    component: ListWidgetComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Widgets' },
+  },
+  {
+    path: 'widget/create',
+    component: CreateWidgetComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Create Widget' },
+  },
+  {
+    path: 'widget/:id',
+    component: WidgetDetailsComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Widget Details' },
   },
   { path: '404', component: NotFoundComponent, data: { breadcrumb: '404' } },
   { path: '**', redirectTo: '404' },

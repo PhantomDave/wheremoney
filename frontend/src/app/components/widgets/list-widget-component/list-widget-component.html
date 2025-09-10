@@ -1,0 +1,28 @@
+<app-flex direction="row" gap="8" align="center" justify="space-between" class="px-2 py-1">
+  <h3 mat-subheader>Widgets</h3>
+  <button mat-flat-button class="btn-secondary" routerLink="/widget/create">
+    <mat-icon fontIcon="add"></mat-icon>
+    Create Widget
+  </button>
+</app-flex>
+@if (!loading) {
+  <mat-list>
+    @for (widget of widgets; track widget.id) {
+      <mat-list-item>
+        <span class="interactable" matListItemTitle routerLink="/widget/{{ widget?.id }}"
+          >{{ widget.name }}
+        </span>
+        <span matListItemLine>Second line will be a good description later</span>
+        <app-flex matListItemMeta direction="row" gap="4" align="center">
+          <mat-icon
+            fontIcon="delete"
+            (click)="onDeleteWidget(widget.id!)"
+            class="interactable"
+          ></mat-icon>
+        </app-flex>
+      </mat-list-item>
+    }
+  </mat-list>
+} @else {
+  <mat-spinner></mat-spinner>
+}

@@ -1,0 +1,4 @@
+.create-widget-card {
+  padding: 32px;
+  background-color: var(--mat-sys-secondary-container);
+}

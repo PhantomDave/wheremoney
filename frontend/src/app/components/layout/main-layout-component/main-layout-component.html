@@ -21,17 +21,34 @@
           <mat-icon matListItemIcon>analytics</mat-icon>
           <span matListItemTitle>Data</span>
         </a>
+        <a mat-list-item routerLink="/widget" class="nav-item">
+          <mat-icon matListItemIcon>widgets</mat-icon>
+          <span matListItemTitle>Widgets</span>
+        </a>
         <a mat-list-item href="#" class="nav-item">
           <mat-icon matListItemIcon>settings</mat-icon>
           <span matListItemTitle>Settings</span>
         </a>
         <div class="bottom-nav">
-          <a mat-list-item (click)="logout()" class="nav-item" tabindex="0" (keyup.enter)="logout()">
+          <a
+            mat-list-item
+            (click)="logout()"
+            class="nav-item"
+            tabindex="0"
+            (keyup.enter)="logout()"
+          >
             <mat-icon matListItemIcon>account_circle</mat-icon>
             <span matListItemTitle>Logout</span>
           </a>
 
-          <a mat-list-item role="button" class="nav-item" (click)="toggleTheme()" tabindex="0" (keyup.enter)="toggleTheme()">
+          <a
+            mat-list-item
+            role="button"
+            class="nav-item"
+            (click)="toggleTheme()"
+            tabindex="0"
+            (keyup.enter)="toggleTheme()"
+          >
             <mat-icon matListItemIcon>{{ isDark ? 'dark_mode' : 'light_mode' }}</mat-icon>
             <span matListItemTitle>{{ isDark ? 'Dark' : 'Light' }} theme</span>
           </a>
@@ -42,9 +59,10 @@
     <mat-sidenav-content class="main-content">
       <div class="content-header">
         <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
-          <mat-icon>{{sidenav.opened ? "keyboard_double_arrow_left" : "keyboard_double_arrow_right" }}</mat-icon>
+          <mat-icon>{{
+            sidenav.opened ? 'keyboard_double_arrow_left' : 'keyboard_double_arrow_right'
+          }}</mat-icon>
         </button>
-
       </div>
       <div class="content-body">
         <router-outlet></router-outlet>

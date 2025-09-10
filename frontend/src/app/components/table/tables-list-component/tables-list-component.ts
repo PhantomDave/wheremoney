@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TableService } from '../../../services/table/table-service';
-import { Router, RouterLink } from '@angular/router';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { Flex } from '../../ui/flex/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { RouterLink } from '@angular/router';
+import { TableService } from '../../../services/table/table-service';
+import { Flex } from '../../ui/flex/flex';
 
 @Component({
   selector: 'app-tables-list-component',
@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class TablesListComponent implements OnInit {
   private tableService = inject(TableService);
-  private router = inject(Router);
 
   get tables() {
     return this.tableService.tables();
