@@ -6,7 +6,6 @@ from models.table import Table
 api = Namespace('data', description='Data operations')
 
 
-
 @api.route('/<int:id>')
 @api.response(404, 'Table not found')
 class Get(Resource):

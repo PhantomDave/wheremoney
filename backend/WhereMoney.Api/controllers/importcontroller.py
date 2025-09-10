@@ -10,15 +10,17 @@ from werkzeug.datastructures import FileStorage
 
 from models.table import Table
 
-# Suppress openpyxl warnings about print areas and other Excel-specific features
+# Suppress openpyxl warnings about print areas and other Excel features
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 api = Namespace('import', description='import operations', path='/import')
 
+
 def make_json_serializable(obj):
     """Convert non-JSON serializable objects to serializable format"""
     if isinstance(obj, (datetime, date)):
-        return obj.strftime('%Y-%m-%d %H:%M:%S') if hasattr(obj, 'strftime') else str(obj)
+        return (obj.strftime('%Y-%m-%d %H:%M:%S')
+                if hasattr(obj, 'strftime') else str(obj))
     elif isinstance(obj, (np.integer, np.floating)):
         return obj.item()
     elif isinstance(obj, np.ndarray):
@@ -30,11 +32,22 @@ def make_json_serializable(obj):
     else:
         return str(obj)
 
+
 upload_parser = api.parser()
-upload_parser.add_argument('file', location='files', type=FileStorage, required=True, help='XLSX file to upload')
-upload_parser.add_argument('header_row', location='form', type=int, required=False, default=0, help='Row index to use as header (0-based)')
-upload_parser.add_argument('start_row', location='form', type=int, required=False, default=None, help='Row index to start reading data from (0-based). If not specified, will start from header_row + 1')
-upload_parser.add_argument('tableId', location='form', type=int, required=True, help='ID of the table to import data into')
+upload_parser.add_argument('file', location='files', type=FileStorage,
+                          required=True, help='XLSX file to upload')
+upload_parser.add_argument('header_row', location='form', type=int,
+                          required=False, default=0,
+                          help='Row index to use as header (0-based)')
+upload_parser.add_argument('start_row', location='form', type=int,
+                          required=False, default=None,
+                          help='Row index to start reading data from '
+                               '(0-based). If not specified, will start '
+                               'from header_row + 1')
+upload_parser.add_argument('tableId', location='form', type=int,
+                          required=True,
+                          help='ID of the table to import data into')
+
 
 @api.route('/xlsx')
 class XLSXUpload(Resource):

@@ -24,6 +24,7 @@ token_model = api.model('Token', {
     'user': fields.Nested(user_model, description='User information')
 })
 
+
 @api.route('/register')
 class UserRegister(Resource):
     @api.doc(security=[])
@@ -50,7 +51,6 @@ class UserRegister(Resource):
         if existing_email:
             api.abort(409, 'Email already in use')
 
-
         user = User(username=username, email=email)
         user.set_password(password)
 
@@ -60,6 +60,7 @@ class UserRegister(Resource):
         return {
             'user': user.serialize()
         }, 201
+
 
 @api.route('/login')
 class UserLogin(Resource):
