@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Import the app directly
 from app import app
 
+
 def run_migration_command(command, message=None):
     """Run migration commands within the app context"""
     with app.app_context():
@@ -37,6 +38,7 @@ def run_migration_command(command, message=None):
             current()
         else:
             print(f"Unknown command: {command}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

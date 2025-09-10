@@ -2,7 +2,6 @@ from flask import request, g
 from flask_restx import Namespace, Resource, fields
 from models.dbConnector import db
 from models.user import User
-from middleware.jwt_auth import public_endpoint
 
 api = Namespace('users', description='User operations')
 

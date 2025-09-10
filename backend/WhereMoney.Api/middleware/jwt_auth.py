@@ -6,19 +6,24 @@ def public_endpoint(f):
     f._is_public = True
     return f
 
+
 def generate_token(user_id, username=None):
     payload = {
         'user_id': user_id,
         'username': username,
-        'exp': datetime.now(timezone.utc) + timedelta(hours=24),  # Token expires in 24 hours
+        # Token expires in 24 hours
+        'exp': datetime.now(timezone.utc) + timedelta(hours=24),
         'iat': datetime.now(timezone.utc)
     }
-    key = current_app.config.get('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
+    key = current_app.config.get(
+        'JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
     return jwt.encode(payload, key, algorithm='HS256')
+
 
 def verify_token(token):
     try:
-        key = current_app.config.get('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
+        key = current_app.config.get(
+            'JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
         payload = jwt.decode(token, key, algorithms=['HS256'])
 
         return payload
@@ -27,10 +32,13 @@ def verify_token(token):
     except jwt.InvalidTokenError:
         return None
 
+
 def authenticate():
     # Allow public paths without authentication
     public_paths = ['/docs', '/openapi.json', '/swaggerui']
-    if request.path in public_paths or request.path.startswith('/static') or request.path.startswith('/swagger'):
+    if (request.path in public_paths or
+            request.path.startswith('/static') or
+            request.path.startswith('/swagger')):
         return None
 
     # Always allow OPTIONS requests (for CORS preflight)
@@ -61,11 +69,13 @@ def authenticate():
     if token and token.startswith('Bearer '):
         token = token[7:]
     else:
-        token = request.headers.get('Bearer') or request.headers.get('Authorization') or request.headers.get('bearer')
+        token = (request.headers.get('Bearer') or
+                 request.headers.get('Authorization') or
+                 request.headers.get('bearer'))
 
     payload = verify_token(token)
     if not payload:
         return jsonify({'message': 'Invalid or expired token'}), 401
-    
+
     g.current_user = payload['user_id']
     return None

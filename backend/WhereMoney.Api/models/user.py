@@ -1,6 +1,7 @@
 from models.dbConnector import db
 import bcrypt
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -8,8 +9,8 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
-
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(),
+                           onupdate=db.func.now())
 
     def __repr__(self):
         return f'<User {self.username}>'
