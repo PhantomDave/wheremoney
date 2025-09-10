@@ -12,10 +12,12 @@ class Table(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref=db.backref('tables', lazy=True))
     # Relazione one-to-many con Column
-    columns = db.relationship('Column', backref='table', lazy=True, cascade='all, delete-orphan')
+    columns = db.relationship('Column', backref='table', lazy=True,
+                              cascade='all, delete-orphan')
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(),
+                           onupdate=db.func.now())
 
     def __repr__(self):
         return f'<Table {self.name}>'
@@ -39,7 +41,8 @@ class Table(db.Model):
                 return {
                     'error': 'Column name and type are required'
                 }
-            column = Column(name=col_name, data_type=col_type, table_id=table.id)
+            column = Column(name=col_name, data_type=col_type,
+                            table_id=table.id)
             table.columns.append(column)
         db.session.commit()
         return table
@@ -69,11 +72,13 @@ class Table(db.Model):
         safe_owner_id = str(self.owner_id)
         table_name = f"{safe_name}_{safe_owner_id}"
         columns_sql = ", ".join(column_definitions)
-        create_table_sql = f'CREATE TABLE "{table_name}" (id SERIAL PRIMARY KEY, {columns_sql});'
+        create_table_sql = (f'CREATE TABLE "{table_name}" '
+                           f'(id SERIAL PRIMARY KEY, {columns_sql});')
         try:
             db.session.execute(text(create_table_sql))
             db.session.commit()
-            return {'message': f'Table {self.name} created successfully in the database'}
+            return {'message': f'Table {self.name} created successfully '
+                             'in the database'}
         except Exception as e:
             db.session.rollback()
             print("Error creating table:", e)
@@ -93,11 +98,14 @@ class Table(db.Model):
                     param_map = {}
                     for col in columns:
                         if col in row:
-                            safe_col = sanitize_identifier(col.replace(" ", "_"))
+                            safe_col = sanitize_identifier(
+                                col.replace(" ", "_"))
                             col_names.append(f'"{safe_col}"')
                             col_values.append(f":{safe_col}")
                             param_map[safe_col] = row[col]
-                    insert_sql = f'INSERT INTO "{table_name}" ({", ".join(col_names)}) VALUES ({", ".join(col_values)})'
+                    insert_sql = (f'INSERT INTO "{table_name}" '
+                                 f'({", ".join(col_names)}) VALUES '
+                                 f'({", ".join(col_values)})')
                     db.session.execute(text(insert_sql), param_map)
             db.session.commit()
             return {'message': 'Data populated successfully'}
@@ -108,7 +116,6 @@ class Table(db.Model):
 
     def getdata(self):
         try:
-            
             safe_name = sanitize_identifier(self.name.replace(" ", "_"))
             safe_owner_id = str(self.owner_id)
             table_name = f"{safe_name}_{safe_owner_id}"

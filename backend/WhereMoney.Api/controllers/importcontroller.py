@@ -35,18 +35,18 @@ def make_json_serializable(obj):
 
 upload_parser = api.parser()
 upload_parser.add_argument('file', location='files', type=FileStorage,
-                          required=True, help='XLSX file to upload')
+                           required=True, help='XLSX file to upload')
 upload_parser.add_argument('header_row', location='form', type=int,
-                          required=False, default=0,
-                          help='Row index to use as header (0-based)')
+                           required=False, default=0,
+                           help='Row index to use as header (0-based)')
 upload_parser.add_argument('start_row', location='form', type=int,
-                          required=False, default=None,
-                          help='Row index to start reading data from '
-                               '(0-based). If not specified, will start '
-                               'from header_row + 1')
+                           required=False, default=None,
+                           help='Row index to start reading data from '
+                                '(0-based). If not specified, will start '
+                                'from header_row + 1')
 upload_parser.add_argument('tableId', location='form', type=int,
-                          required=True,
-                          help='ID of the table to import data into')
+                           required=True,
+                           help='ID of the table to import data into')
 
 
 @api.route('/xlsx')
