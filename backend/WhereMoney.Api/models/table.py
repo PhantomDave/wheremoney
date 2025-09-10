@@ -73,12 +73,12 @@ class Table(db.Model):
         table_name = f"{safe_name}_{safe_owner_id}"
         columns_sql = ", ".join(column_definitions)
         create_table_sql = (f'CREATE TABLE "{table_name}" '
-                           f'(id SERIAL PRIMARY KEY, {columns_sql});')
+                            f'(id SERIAL PRIMARY KEY, {columns_sql});')
         try:
             db.session.execute(text(create_table_sql))
             db.session.commit()
             return {'message': f'Table {self.name} created successfully '
-                             'in the database'}
+                            f'in the database'}
         except Exception as e:
             db.session.rollback()
             print("Error creating table:", e)
@@ -104,8 +104,8 @@ class Table(db.Model):
                             col_values.append(f":{safe_col}")
                             param_map[safe_col] = row[col]
                     insert_sql = (f'INSERT INTO "{table_name}" '
-                                 f'({", ".join(col_names)}) VALUES '
-                                 f'({", ".join(col_values)})')
+                                  f'({", ".join(col_names)}) VALUES '
+                                  f'({", ".join(col_values)})')
                     db.session.execute(text(insert_sql), param_map)
             db.session.commit()
             return {'message': 'Data populated successfully'}

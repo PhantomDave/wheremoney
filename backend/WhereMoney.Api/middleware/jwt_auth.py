@@ -15,15 +15,15 @@ def generate_token(user_id, username=None):
         'exp': datetime.now(timezone.utc) + timedelta(hours=24),
         'iat': datetime.now(timezone.utc)
     }
-    key = current_app.config.get('JWT_SECRET_KEY',
-                                  'your-secret-key-change-this-in-production')
+    key = current_app.config.get(
+        'JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
     return jwt.encode(payload, key, algorithm='HS256')
 
 
 def verify_token(token):
     try:
-        key = current_app.config.get('JWT_SECRET_KEY',
-                                      'your-secret-key-change-this-in-production')
+        key = current_app.config.get(
+            'JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
         payload = jwt.decode(token, key, algorithms=['HS256'])
 
         return payload
@@ -37,8 +37,8 @@ def authenticate():
     # Allow public paths without authentication
     public_paths = ['/docs', '/openapi.json', '/swaggerui']
     if (request.path in public_paths or
-        request.path.startswith('/static') or
-        request.path.startswith('/swagger')):
+            request.path.startswith('/static') or
+            request.path.startswith('/swagger')):
         return None
 
     # Always allow OPTIONS requests (for CORS preflight)
