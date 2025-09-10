@@ -14,15 +14,21 @@ export const unauthorizedHandlingInterceptor: HttpInterceptorFn = (req, next) =>
         try {
           cookieService.delete('jwt_session', '/');
           cookieService.delete('jwt_session');
-        } catch (e) {}
+        } catch {
+          // Ignore cookie deletion errors
+        }
 
         try {
           cookieService.set('jwt_session', '', new Date(0), '/');
-        } catch (e) {}
+        } catch {
+          // Ignore cookie setting errors
+        }
 
         try {
           router.navigate(['/account/login']).then();
-        } catch (e) {}
+        } catch {
+          // Ignore navigation errors
+        }
       }
 
       return throwError(() => err);

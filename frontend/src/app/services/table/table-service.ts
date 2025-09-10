@@ -1,8 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { ApiWrapper } from '../api-wrapper';
 import { environment } from '../../../environments/environment';
 import { Table } from '../../models/table';
 import { firstValueFrom } from 'rxjs';
+import { ApiError } from '../../models/api-error';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class TableService {
   public readonly loading = this._loading.asReadonly();
   public readonly error = this._error.asReadonly();
 
-  constructor(private readonly api: ApiWrapper) {}
+  private readonly api = inject(ApiWrapper);
 
   public async createTable(table: Table): Promise<Table> {
     this._loading.set(true);
@@ -33,16 +34,17 @@ export class TableService {
         this.api.post<Table>(`${this.baseTableUrl}/`, table, {}, true),
       );
 
-      // Use update to keep state transformations pure. Since _tables is always an array
-      // we don't need to check for undefined — update receives the current array and
-      // returns a new array (immutable pattern): good for change detection.
-      this._tables.update((tables) => [...tables, response]);
-
-      this._selectedTable.set(response);
-
-      return response;
+      // Type guard to ensure response is a valid Table
+      if (response && typeof response === 'object' && 'name' in response) {
+        const tableResponse = response as Table;
+        this._tables.update((tables) => [...tables, tableResponse]);
+        this._selectedTable.set(tableResponse);
+        return tableResponse;
+      }
+      
+      throw new Error('Invalid response from server');
     } catch (error) {
-      const apiError = error as any;
+      const apiError = error as ApiError;
       const errorMessage =
         apiError?.error?.message || apiError?.message || 'Failed to create table';
       this._error.set(errorMessage);
@@ -60,9 +62,13 @@ export class TableService {
       const response = await firstValueFrom(
         this.api.get<Table[]>(`${this.baseTableUrl}/`, {}, true),
       );
-      this._tables.set(response);
+      if (Array.isArray(response)) {
+        this._tables.set(response);
+      } else {
+        this._tables.set([]);
+      }
     } catch (error) {
-      const apiError = error as any;
+      const apiError = error as ApiError;
       const errorMessage = apiError?.error?.message || apiError?.message || 'Failed to get tables';
       this._error.set(errorMessage);
       this._tables.set([]);
@@ -80,9 +86,13 @@ export class TableService {
         this.api.get<Table>(`${this.baseTableUrl}/${id}`, {}, true),
       );
 
-      this._selectedTable.set(response);
+      if (response && typeof response === 'object' && 'name' in response) {
+        this._selectedTable.set(response as Table);
+      } else {
+        this._selectedTable.set(null);
+      }
     } catch (error) {
-      const apiError = error as any;
+      const apiError = error as ApiError;
       const errorMessage = apiError?.error?.message || apiError?.message || 'Table not found';
       this._error.set(errorMessage);
       this._selectedTable.set(null);
@@ -103,7 +113,7 @@ export class TableService {
         this._selectedTable.set(null);
       }
     } catch (error) {
-      const apiError = error as any;
+      const apiError = error as ApiError;
       const errorMessage =
         apiError?.error?.message || apiError?.message || 'Failed to delete table';
       this._error.set(errorMessage);

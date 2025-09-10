@@ -8,19 +8,18 @@ import {
 } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-pie-chart-component',
-  imports: [MatDivider, MatButton, BaseChartDirective],
+  imports: [MatDivider, BaseChartDirective],
   templateUrl: './pie-chart-component.html',
   styleUrl: './pie-chart-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PieChartComponent {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-  @Input() title: string = 'Pie Chart';
+  @Input() title = 'Pie Chart';
   @Input() pieChartOptions: ChartConfiguration['options'] = {
     plugins: {
       legend: {

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ApiWrapper } from '../api-wrapper';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+import { ApiError } from '../../models/api-error';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class ImportService {
     try {
       await firstValueFrom(this.api.post<void>(`${this.baseImportUrl}/xlsx`, formData, {}, true));
     } catch (error) {
-      const apiError = error as any;
+      const apiError = error as ApiError;
       const errorMessage = apiError?.error?.message || apiError?.message || 'Failed to import file';
       throw new Error(errorMessage);
     }

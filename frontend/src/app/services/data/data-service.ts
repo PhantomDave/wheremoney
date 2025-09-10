@@ -1,5 +1,4 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { TableService } from '../table/table-service';
 import { ApiWrapper } from '../api-wrapper';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../../models/api-error';
@@ -11,7 +10,7 @@ import { environment } from '../../../environments/environment';
 export class DataService {
   readonly api = inject(ApiWrapper);
 
-  private readonly _data = signal<any[]>([]);
+  private readonly _data = signal<unknown[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
@@ -25,10 +24,14 @@ export class DataService {
 
     try {
       const response = await firstValueFrom(
-        this.api.get<any>(`${environment.apiUrl}/data/${tableId}`, {}, true),
+        this.api.get<unknown>(`${environment.apiUrl}/data/${tableId}`, {}, true),
       );
       if (response) {
-        this._data.set(response);
+        if (Array.isArray(response)) {
+          this._data.set(response);
+        } else {
+          this._data.set([]);
+        }
       }
     } catch (error) {
       const apiError = error as ApiError;

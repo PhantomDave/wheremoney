@@ -1,5 +1,5 @@
 export interface ApiError {
-  headers: any;
+  headers: Record<string, unknown>;
   status: number;
   statusText: string;
   url: string;

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Account, AuthResponse } from '../../models/account';
 import { environment } from '../../../environments/environment';
@@ -22,10 +22,8 @@ export class AccountService {
   public readonly loading = this._loading.asReadonly();
   public readonly error = this._error.asReadonly();
 
-  constructor(
-    private readonly api: ApiWrapper,
-    private readonly cookieService: CookieService,
-  ) {}
+  private readonly api = inject(ApiWrapper);
+  private readonly cookieService = inject(CookieService);
 
   async createAccount(account: Account): Promise<void> {
     this._loading.set(true);
@@ -35,9 +33,9 @@ export class AccountService {
       const response = await firstValueFrom(
         this.api.post<Account>(`${this.baseAuthUrl}/register`, account),
       );
-      console.log(response);
-      if (response) {
-        this._account.set(response);
+      // Registration successful
+      if (response && typeof response === 'object' && 'username' in response && 'email' in response) {
+        this._account.set(response as Account);
       }
     } catch (error) {
       const apiError = error as ApiError;
@@ -63,10 +61,10 @@ export class AccountService {
         this.api.put<Account>(`${this.baseAuthUrl}/${id}`, account),
       );
 
-      if (updatedAccount) {
-        this._account.set(updatedAccount);
-        if (this._selectedAccount()?.id === id) {
-          this._selectedAccount.set(updatedAccount);
+      if (updatedAccount && typeof updatedAccount === 'object' && 'username' in updatedAccount && 'email' in updatedAccount) {
+        this._account.set(updatedAccount as Account);
+        if (this._selectedAccount()?.id === (updatedAccount as Account).id) {
+          this._selectedAccount.set(updatedAccount as Account);
         }
       }
     } catch (error) {
@@ -109,12 +107,13 @@ export class AccountService {
         }),
       );
 
-      if (isValid?.token) {
-        this._selectedAccount.set(isValid.account);
-        this.setLoggedIn(isValid.token);
+      if (isValid && typeof isValid === 'object' && 'token' in isValid && 'account' in isValid) {
+        const authResponse = isValid as AuthResponse;
+        this._selectedAccount.set(authResponse.account);
+        this.setLoggedIn(authResponse.token);
       }
 
-      return isValid?.account !== undefined;
+      return isValid && typeof isValid === 'object' && 'account' in isValid;
     } catch (error: unknown) {
       // Use the caught error to provide a more specific message when possible.
       let message = 'Invalid Credentials';

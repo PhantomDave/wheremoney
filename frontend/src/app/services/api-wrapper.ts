@@ -1,6 +1,6 @@
 // noinspection ExceptionCaughtLocallyJS
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
@@ -20,20 +20,18 @@ export interface ApiRequestOptions {
   providedIn: 'root',
 })
 export class ApiWrapper {
-  constructor(
-    private readonly http: HttpClient,
-    private readonly cookieService: CookieService,
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly cookieService = inject(CookieService);
 
   get<T>(url: string, options?: ApiRequestOptions, withCredentials?: boolean) {
     return this.request<T>('GET', url, undefined, options, withCredentials);
   }
 
-  post<T>(url: string, body: any, options?: ApiRequestOptions, withCredentials?: boolean)  {
+  post<T>(url: string, body: unknown, options?: ApiRequestOptions, withCredentials?: boolean)  {
     return this.request<T>('POST', url, body, options, withCredentials);
   }
 
-  put<T>(url: string, body: any, options?: ApiRequestOptions, withCredentials?: boolean) {
+  put<T>(url: string, body: unknown, options?: ApiRequestOptions, withCredentials?: boolean) {
     return this.request<T>('PUT', url, body, options, withCredentials);
   }
 
@@ -41,11 +39,11 @@ export class ApiWrapper {
     return this.request<T>('DELETE', url, undefined, options, withCredentials);
   }
 
-  patch<T>(url: string, body: any, options?: ApiRequestOptions, withCredentials?: boolean) {
+  patch<T>(url: string, body: unknown, options?: ApiRequestOptions, withCredentials?: boolean) {
     return this.request<T>('PATCH', url, body, options, withCredentials);
   }
 
-  request<T>(method: string, url: string, body?: ApiRequestOptions, options?: any, withCredentials?: boolean) {
+  request<T>(method: string, url: string, body?: unknown, options?: ApiRequestOptions, withCredentials?: boolean) {
    try {
 
     method = method.toUpperCase();
@@ -89,11 +87,31 @@ export class ApiWrapper {
 
     options.body = body;
     options.headers = headers;
-    return this.http.request<T>(method, url, options) as Observable<T>;
+    
+    // Simplified options without conflicting observe types
+    const httpOptions: Record<string, unknown> = {
+      headers: options.headers,
+      body: options.body,
+    };
+    
+    if (options.params) {
+      httpOptions['params'] = options.params;
+    }
+    if (options.reportProgress !== undefined) {
+      httpOptions['reportProgress'] = options.reportProgress;
+    }
+    if (options.withCredentials !== undefined) {
+      httpOptions['withCredentials'] = options.withCredentials;
+    }
+    
+    return this.http.request<T>(method, url, httpOptions) as Observable<T>;
    }
     catch (error) {
-     console.error(error);
-     throw error;
+     // Log error appropriately and re-throw for handling by calling code
+     if (error instanceof Error) {
+       throw new Error(`API request failed: ${error.message}`);
+     }
+     throw new Error('An unexpected error occurred during API request');
     }
   }
 

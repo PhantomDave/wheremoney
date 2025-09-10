@@ -7,8 +7,7 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Column } from '../../../models/column';
 import { TableService } from '../../../services/table/table-service';
-import { MatSortModule, Sort, MatSort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatSortModule, MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-data-details-component',
@@ -52,10 +51,12 @@ export class DataDetailsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
-      await this.dataService.getDataByTableId(this.table?.id!);
+      if (this.table?.id !== undefined) {
+        await this.dataService.getDataByTableId(this.table.id);
+      }
       let selected = this.table;
       if (!selected) {
-        let id = params.get('id');
+        const id = params.get('id');
         const tableId = parseInt(id!, 10);
         if (id) {
           await this.tableService.getTableById(tableId);
@@ -85,8 +86,8 @@ export class DataDetailsComponent implements OnInit, AfterViewInit {
     if (Array.isArray(raw)) {
       return raw;
     }
-    if (raw && typeof raw === 'object' && Array.isArray((raw as any).data)) {
-      return (raw as any).data;
+    if (raw && typeof raw === 'object' && Array.isArray((raw as Record<string, unknown>)['data'])) {
+      return (raw as Record<string, unknown>)['data'] as unknown[];
     }
     return [];
   }

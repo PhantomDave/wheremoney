@@ -31,8 +31,8 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./main-layout-component.css'],
 })
 export class MainLayoutComponent implements OnInit {
-  opened: boolean = true;
-  isDark: boolean = false;
+  opened = true;
+  isDark = false;
   protected activatedRoute = inject(ActivatedRoute);
   private cookieService = inject(CookieService);
   private router = inject(Router);

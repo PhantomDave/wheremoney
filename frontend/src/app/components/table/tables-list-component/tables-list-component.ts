@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TableService } from '../../../services/table/table-service';
 import { Router, RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './tables-list-component.html',
   styleUrl: './tables-list-component.css',
 })
-export class TablesListComponent {
+export class TablesListComponent implements OnInit {
   private tableService = inject(TableService);
   private router = inject(Router);
 
