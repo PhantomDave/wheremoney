@@ -75,7 +75,6 @@ class XLSXUpload(Resource):
                 for sheet_name in excel_file.sheet_names:
                     df = pd.read_excel(filepath, sheet_name=sheet_name, header=header_row)
 
-                    print(header_row)
                     for col in df.columns:
                         if df[col].dtype == 'datetime64[ns]':
                             df[col] = df[col].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -110,7 +109,6 @@ class XLSXUpload(Resource):
                 }, 200
 
             except Exception as e:
-                # Clean up file if processing fails
                 if os.path.exists(filepath):
                     os.remove(filepath)
                 print(e)
