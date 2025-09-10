@@ -8,18 +8,20 @@ try:
     if env_path.exists():
         load_dotenv(dotenv_path=env_path)
 except Exception:
-    # python-dotenv not installed or failed to load; fall back to environment variables
+    # python-dotenv not installed or failed to load; fall back to env vars
     pass
 
 
 class Config:
-    """Base configuration - reads from environment variables with sensible defaults."""
+    """Base configuration - reads from environment variables with defaults."""
 
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret')
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY',
+                               'your-secret-key-change-this-in-production')
 
     # Database URL: use DATABASE_URL if provided, otherwise a local sqlite file
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f"sqlite:///{Path(__file__).parent / 'data.db'}")
+    db_path = Path(__file__).parent / 'data.db'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f"sqlite:///{db_path}")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Flask-Migrate / Alembic
@@ -51,4 +53,3 @@ config_by_name = {
     'production': ProductionConfig,
     'default': DevelopmentConfig,
 }
-

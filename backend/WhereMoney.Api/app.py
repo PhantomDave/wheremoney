@@ -7,19 +7,21 @@ from middleware.jwt_auth import authenticate
 import os
 from config import config_by_name
 
-from models.user import User
-from models.table import Table
-from models.column import Column
-
 config_name = os.getenv('FLASK_CONFIG', 'default')
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-app.config.from_object(config_by_name.get(config_name, config_by_name['default']))
-config_by_name.get(config_name, config_by_name['default']).init_app(app)
+config_obj = config_by_name.get(config_name, config_by_name['default'])
+app.config.from_object(config_obj)
+config_obj.init_app(app)
 
 # Enable CORS for all origins
-CORS(app, origins=app.config.get('CORS_ORIGINS', '*'), methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], allow_headers=["Content-Type", "Authorization", "bearer", "Bearer", "X-Requested-With"], supports_credentials=True)
+CORS(app,
+     origins=app.config.get('CORS_ORIGINS', '*'),
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization", "bearer", "Bearer",
+                    "X-Requested-With"],
+     supports_credentials=True)
 # Initialize database and migrations
 db.init_app(app)
 
@@ -30,7 +32,8 @@ authorizations = {
         'type': 'apiKey',
         'in': 'header',
         'name': 'Authorization',
-        'description': 'Enter your JWT token in the format **Bearer &lt;token&gt;**'
+        'description': ('Enter your JWT token in the format '
+                        '**Bearer &lt;token&gt;**')
     }
 }
 
@@ -38,7 +41,8 @@ api = Api(
     app,
     version='1.0',
     title='User API',
-    description='OpenAPI / Swagger docs for the User endpoints with JWT authentication',
+    description=('OpenAPI / Swagger docs for the User endpoints '
+                 'with JWT authentication'),
     doc='/docs',
     authorizations=authorizations,
     security='Bearer'
@@ -62,4 +66,6 @@ with app.app_context():
     pass
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=app.config.get('DEBUG', True))
+    app.run(host='0.0.0.0',
+            port=int(os.getenv('PORT', 5000)),
+            debug=app.config.get('DEBUG', True))
