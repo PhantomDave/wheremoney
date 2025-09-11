@@ -52,7 +52,7 @@ class Table(db.Model):
             safe_name = sanitize_identifier(self.name.replace(" ", "_"))
             safe_owner_id = str(self.owner_id)
             table_name = f"{safe_name}_{safe_owner_id}"
-            drop_table_sql = f'DROP TABLE "{table_name}" CASCADE;'
+            drop_table_sql = f'DROP TABLE IF EXISTS "{table_name}" CASCADE;'
             db.session.execute(text(drop_table_sql))
             db.session.delete(self)
             db.session.commit()

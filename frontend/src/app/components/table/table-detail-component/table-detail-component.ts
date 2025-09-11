@@ -20,7 +20,7 @@ export class TableDetailComponent implements OnInit {
   readonly loading = this.tableService.loading;
   readonly error = this.tableService.error;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -36,9 +36,5 @@ export class TableDetailComponent implements OnInit {
 
   onClearError() {
     this.tableService.clearError();
-  }
-
-  onSelectTable(table: Table | null) {
-    this.tableService.selectTable(table);
   }
 }

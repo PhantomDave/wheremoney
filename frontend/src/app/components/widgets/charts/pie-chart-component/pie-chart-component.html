@@ -1,1 +1,9 @@
-<p>pie-chart-component works!</p>
+@if (isLoading && widget && data) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+} @else {
+  <canvas baseChart [data]="pieChartData" [type]="'pie'" [options]="pieChartOptions"> </canvas>
+}

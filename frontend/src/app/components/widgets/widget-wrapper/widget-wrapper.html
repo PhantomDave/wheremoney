@@ -5,17 +5,26 @@
   [gap]="'16px'"
   [className]="'widget-wrapper'"
 >
-  <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
+  @if (widget) {
+    <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
+  }
 </app-flex>
-@if (selectedTable) {
+@if (widget && selectedTable && data && !isLoading) {
   <app-flex [direction]="'column'" [align]="'center'" [justify]="'center'" [gap]="'16px'">
-    @switch (widget?.type) {
-      @case (WidgetType.PIE_CHART){
-        <app-pie-chart-component [widget]="widget" [table]="selectedTable" [data]="data"></app-pie-chart-component>
-        @break;
+    @switch (widget.type) {
+      @case (WidgetType.PIE_CHART) {
+        <app-pie-chart-component
+          [widget]="widget"
+          [table]="selectedTable"
+          [data]="data"
+          [isLoading]="isLoading"
+        ></app-pie-chart-component>
       }
-      @default{
+      @default {
         <p>Unknown widget type</p>
-    }}
+      }
+    }
   </app-flex>
+} @else {
+  <p>No data available for this widget.</p>
 }

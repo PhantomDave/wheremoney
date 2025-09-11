@@ -10,6 +10,11 @@ export interface Widget {
   updated_at?: string;
 }
 
+export interface WidgetData {
+  category: string;
+  value: string;
+}
+
 export enum WidgetType {
   BAR_CHART = 'Bar Chart',
   LINE_CHART = 'Line Chart',

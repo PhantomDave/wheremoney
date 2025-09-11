@@ -1,1 +1,9 @@
-<app-widget-wrapper [widget]="widget"></app-widget-wrapper>
+@if (loading) {
+  <div>Loading widget...</div>
+} @else if (error) {
+  <div>Error: {{ error }}</div>
+} @else if (widget) {
+  <app-widget-wrapper [widget]="widget"></app-widget-wrapper>
+} @else {
+  <div>Widget not found</div>
+}

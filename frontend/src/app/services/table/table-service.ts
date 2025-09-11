@@ -82,7 +82,7 @@ export class TableService {
       );
 
       if (response && typeof response === 'object' && 'name' in response) {
-        this._selectedTable.set(response as Table);
+        this._selectedTable.set(response);
       } else {
         this._selectedTable.set(null);
       }
@@ -104,9 +104,6 @@ export class TableService {
       await firstValueFrom(this.api.delete<void>(`${this.baseTableUrl}/${id}`, {}, true));
 
       this._tables.update((tables) => tables?.filter((table) => table.id !== id));
-      if (this._selectedTable()?.id === id) {
-        this._selectedTable.set(null);
-      }
     } catch (error) {
       const apiError = error as ApiError;
       const errorMessage =
@@ -115,10 +112,6 @@ export class TableService {
     } finally {
       this._loading.set(false);
     }
-  }
-
-  public selectTable(table: Table | null): void {
-    this._selectedTable.set(table);
   }
 
   public clearError(): void {

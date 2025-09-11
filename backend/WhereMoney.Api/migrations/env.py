@@ -51,6 +51,42 @@ def get_metadata():
     return target_db.metadata
 
 
+def include_object(object, name, type_, reflected, compare_to):
+    """
+    Function to determine whether an object should be included in migrations.
+    
+    This implementation prevents Flask-Migrate from dropping tables that are
+    not explicitly defined in SQLAlchemy models, protecting manual tables.
+    
+    Args:
+        object: The SQLAlchemy object
+        name: Name of the object (table, column, etc.)
+        type_: Type of object ('table', 'column', 'index', etc.)
+        reflected: Whether this was reflected from the database
+        compare_to: The object being compared to (for diffs)
+    """
+    # For tables: only allow operations on tables defined in SQLAlchemy models
+    if type_ == "table":
+        # Get the current SQLAlchemy metadata
+        metadata = get_metadata()
+        
+        # Only include tables that are defined in our SQLAlchemy models
+        # This prevents accidental deletion of manual tables
+        return name in metadata.tables
+    
+    # For other objects (columns, indexes, etc.), only include if their 
+    # parent table is managed by SQLAlchemy
+    if type_ in ("column", "index", "unique_constraint", "foreign_key"):
+        # Get the table name for this object
+        if hasattr(object, 'table'):
+            table_name = object.table.name
+            metadata = get_metadata()
+            # Only include if the parent table is managed by SQLAlchemy
+            return table_name in metadata.tables
+    
+    return True
+
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
 
@@ -65,7 +101,10 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
+        url=url, 
+        target_metadata=get_metadata(), 
+        literal_binds=True,
+        include_object=include_object
     )
 
     with context.begin_transaction():
@@ -100,6 +139,7 @@ def run_migrations_online():
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
+            include_object=include_object,
             **conf_args
         )
 
