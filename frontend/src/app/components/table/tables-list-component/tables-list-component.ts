@@ -14,7 +14,7 @@ import { Flex } from '../../ui/flex/flex';
   styleUrl: './tables-list-component.css',
 })
 export class TablesListComponent implements OnInit {
-  private tableService = inject(TableService);
+  private readonly tableService = inject(TableService);
 
   get tables() {
     return this.tableService.tables();
@@ -28,8 +28,8 @@ export class TablesListComponent implements OnInit {
     return this.tableService.error();
   }
 
-  async ngOnInit() {
-    await this.tableService.getAllUserTables();
+  ngOnInit() {
+    this.tableService.getAllUserTables();
   }
 
   async onDeleteTable(id: number | undefined) {

@@ -1,8 +1,18 @@
-<h2 mat-dialog-title>Configure {{ data.widgetType }} Widget for {{ data.table.name }}</h2>
+<h2 mat-dialog-title>Configure {{ data.widget.name }} Widget for {{ selectedTable?.name }}</h2>
 <mat-dialog-content>
-  <p>Select the columns you want to include in the {{ data.widgetType }} widget:</p>
-  <p>Widget ID: {{ data.widgetId }}</p>
-  <p>Table ID: {{ data.table.id }}</p>
+  <p>Select the columns you want to include in the {{ data.widget.type }} widget:</p>
+  <p>Widget ID: {{ data.widget.id }}</p>
+  <app-flex direction="row" align="center" justify="space-between" gap="8px">
+    <p>Table</p>
+    <mat-form-field>
+      <mat-label>Select Table</mat-label>
+      <mat-select (selectionChange)="onSelectionChange($event.value)">
+        @for (table of tables; track table.id) {
+          <mat-option [value]="table.id">{{ table.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </app-flex>
 
   <div class="column-selection">
     <mat-checkbox
@@ -14,27 +24,32 @@
       Select All Columns
     </mat-checkbox>
 
-    @for (column of data.table.columns; track column.id) {
-      <mat-checkbox
-        (click)="$event.stopPropagation()"
-        (change)="$event ? selection.toggle(column) : null"
-        [checked]="selection.isSelected(column)"
-        (keydown)="$event.key === 'Enter' ? selection.toggle(column) : null"
-      >
-        {{ column.name }} ({{ column.data_type }})
-      </mat-checkbox>
-      <mat-form-field>
-        <mat-label>Select Table</mat-label>
-        <mat-select (selectionChange)="onTypeSelectionChange($event.value, column)">
-          @for (type of types; track $index) {
-            <mat-option [value]="type">{{ type }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+    @for (column of selectedTable?.columns; track column.id) {
+      <app-flex direction="row" align="center" justify="space-between" gap="8px">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="onCheckboxClicked($event, column)"
+          [checked]="selection.isSelected(column)"
+          (keydown)="$event.key === 'Enter' ? selection.toggle(column) : null"
+        >
+          {{ column.name }}
+        </mat-checkbox>
+        <mat-form-field>
+          <mat-label>Select type of aggregation</mat-label>
+          <mat-select
+            (selectionChange)="onTypeAggregationChange($event.value, column)"
+            [value]="types[0]"
+          >
+            @for (type of types; track $index) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </app-flex>
     }
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button matButton (click)="onNoClick()">Cancel</button>
-  <button matButton [mat-dialog-close]="save()" cdkFocusInitial>Configure Widget</button>
+  <button matButton (click)="save()" cdkFocusInitial>Configure Widget</button>
 </mat-dialog-actions>

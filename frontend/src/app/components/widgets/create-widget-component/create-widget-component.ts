@@ -7,7 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { Flex } from '../../ui/flex/flex';
 import { MatCardModule } from '@angular/material/card';
 import { WidgetService } from '../../../services/widget/widget-service';
-import { Widget } from '../../../models/widget';
+import { Widget, WidgetType } from '../../../models/widget';
+import { MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-widget-component',
@@ -20,22 +22,29 @@ import { Widget } from '../../../models/widget';
     MatButtonModule,
     Flex,
     MatCardModule,
+    MatSelectModule,
   ],
   templateUrl: './create-widget-component.html',
   styleUrl: './create-widget-component.css',
 })
 export class CreateWidgetComponent {
   readonly fb: FormBuilder = inject(FormBuilder);
-
   readonly widgetService = inject(WidgetService);
+  readonly router = inject(Router);
+
+  widgetTypes = Object.values(WidgetType);
 
   widgetForm: FormGroup;
 
   constructor() {
     this.widgetForm = this.fb.group({
       name: ['', Validators.required],
-      type: ['', Validators.required],
+      type: [WidgetType.PIE_CHART, Validators.required],
     });
+  }
+
+  onChartTypeChange(type: WidgetType) {
+    this.widgetForm.patchValue({ type });
   }
 
   async onSubmit(): Promise<void> {
@@ -48,9 +57,11 @@ export class CreateWidgetComponent {
     const widget: Widget = {
       name: payload.name,
       type: payload.type,
-      data: '',
+      widget_data: '',
     };
-    this.widgetService.createWidget(widget);
+    const createdWidget = await this.widgetService.createWidget(widget);
     this.widgetForm.reset();
+
+    await this.router.navigate([`/widgets/${createdWidget.id}`]);
   }
 }

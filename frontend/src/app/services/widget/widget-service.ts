@@ -35,6 +35,22 @@ export class WidgetService {
     }
   }
 
+  async getWidgetById(id: number) {
+    this._loading.set(true);
+    this._error.set(null);
+    try {
+      const response = await firstValueFrom(
+        this.api.get<Widget>(`${this.baseWidgetUrl}/${id}`, {}, true),
+      );
+      this._selectedWidget.set(response);
+    } catch (error) {
+      this._error.set('Failed to load widget');
+      console.error('Error fetching widget:', error);
+    } finally {
+      this._loading.set(false);
+    }
+  }
+
   async createWidget(widget: Widget) {
     this._loading.set(true);
     this._error.set(null);
@@ -42,6 +58,7 @@ export class WidgetService {
       const response = await firstValueFrom(
         this.api.post<Widget>(`${this.baseWidgetUrl}`, widget, {}, true),
       );
+      this._widgets.update((widgets) => [...widgets, response]);
       return response;
     } catch (error) {
       this._error.set('Failed to create widget');
@@ -52,7 +69,21 @@ export class WidgetService {
     }
   }
 
-  // deleteWidget(id: number) {}
+  async updateWidget(widget: Widget) {
+    this._loading.set(true);
+    this._error.set(null);
+    try {
+      await firstValueFrom(
+        this.api.put<Widget>(`${this.baseWidgetUrl}/${widget.id}`, widget, {}, true),
+      );
+    } catch (error) {
+      this._error.set('Failed to update widget');
+      console.error('Error updating widget:', error);
+      throw error;
+    } finally {
+      this._loading.set(false);
+    }
+  }
 
-  // updateWidget(widget: Widget) {}
+  // deleteWidget(id: number) {}
 }

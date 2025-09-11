@@ -34,15 +34,10 @@ export class TableService {
         this.api.post<Table>(`${this.baseTableUrl}/`, table, {}, true),
       );
 
-      // Type guard to ensure response is a valid Table
-      if (response && typeof response === 'object' && 'name' in response) {
-        const tableResponse = response as Table;
-        this._tables.update((tables) => [...tables, tableResponse]);
-        this._selectedTable.set(tableResponse);
-        return tableResponse;
-      }
-      
-      throw new Error('Invalid response from server');
+      const tableResponse = response;
+      this._tables.update((tables) => [...tables, tableResponse]);
+      this._selectedTable.set(tableResponse);
+      return tableResponse;
     } catch (error) {
       const apiError = error as ApiError;
       const errorMessage =

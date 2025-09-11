@@ -6,6 +6,9 @@ class Widget(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False)
     type = db.Column(db.String(50), nullable=False)
 
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=True)
+    table = db.relationship('Table', backref=db.backref('widgets', lazy=True))
+
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref=db.backref('widgets', lazy=True))
     widget_data = db.Column(db.JSON, nullable=True)
@@ -23,6 +26,7 @@ class Widget(db.Model):
             'name': self.name,
             'type': self.type,
             'widget_data': self.widget_data,
+            'table_id': self.table_id,
             'owner_id': self.owner_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
@@ -39,3 +43,17 @@ class Widget(db.Model):
             print(f"Error checking existing widget: {e}")
             raise
         return self
+    
+    def updateWidget(self):
+        try:
+            # Check if name is being changed and if new name conflicts
+            existing = Widget.query.filter_by(name=self.name, owner_id=self.owner_id).filter(Widget.id != self.id).first()
+            if existing:
+                raise ValueError("Widget with this name already exists for the user.")
+            
+            db.session.commit()
+            return self
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating widget: {e}")
+            raise

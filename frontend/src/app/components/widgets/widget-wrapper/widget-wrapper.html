@@ -5,21 +5,17 @@
   [gap]="'16px'"
   [className]="'widget-wrapper'"
 >
-  <mat-form-field>
-    <mat-label>Select Table</mat-label>
-    <mat-select (selectionChange)="onSelectionChange($event.value)">
-      @for (table of tables; track table.id) {
-        <mat-option [value]="table.id">{{ table.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  @if (selectedTable()) {
-    <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
-  }
+  <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
 </app-flex>
-@if (selectedTable()) {
+@if (selectedTable) {
   <app-flex [direction]="'column'" [align]="'center'" [justify]="'center'" [gap]="'16px'">
-    <ng-content></ng-content>
+    @switch (widget?.type) {
+      @case (WidgetType.PIE_CHART){
+        <app-pie-chart-component [widget]="widget" [table]="selectedTable" [data]="data"></app-pie-chart-component>
+        @break;
+      }
+      @default{
+        <p>Unknown widget type</p>
+    }}
   </app-flex>
 }

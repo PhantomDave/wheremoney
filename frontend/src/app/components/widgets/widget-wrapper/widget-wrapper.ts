@@ -1,66 +1,45 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  OnInit,
-  output,
-  signal,
-  model,
-} from '@angular/core';
-import { Flex } from '../../ui/flex/flex';
-import { TableService } from '../../../services/table/table-service';
-import { Table } from '../../../models/table';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { Widget, WidgetType } from '../../../models/widget';
+import { TableService } from '../../../services/table/table-service';
+import { Flex } from '../../ui/flex/flex';
 import { WidgetConfigurator } from '../configurator/widget-configurator/widget-configurator';
-import { MatDialog } from '@angular/material/dialog';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { PieChartComponent } from '../charts/pie-chart-component/pie-chart-component';
 
 @Component({
   selector: 'app-widget-wrapper',
   imports: [
     Flex,
     MatFormFieldModule,
+    MatDialogModule,
     MatSelectModule,
     MatInputModule,
     MatIconModule,
     MatCheckboxModule,
+    PieChartComponent,
   ],
   templateUrl: './widget-wrapper.html',
   styleUrl: './widget-wrapper.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetWrapper implements OnInit {
-  readonly tableService = inject(TableService);
-  selectedTableChanged = output<Table | null>();
-  selectedTable = signal<Table | null>(null);
-  ngOnInit() {
-    this.tableService.getAllUserTables().then();
-  }
-
-  get tables(): Table[] {
-    return this.tableService.tables();
-  }
-
-  onSelectionChange(value: number) {
-    const table = this.tables.find((t) => t.id === value) || null;
-    this.selectedTable.set(table);
-    this.selectedTableChanged.emit(table);
-  }
-
-  //Dialog Stuff
-  readonly animal = signal('');
-  readonly name = model('');
+export class WidgetWrapper {
   readonly dialog = inject(MatDialog);
+  readonly tableService = inject(TableService);
+  @Input() widget: Widget | null = null;
+
+  get selectedTable() {
+    return this.tableService.selectedTable();
+  }
 
   openSettings() {
     this.dialog.open(WidgetConfigurator, {
       data: {
-        table: this.selectedTable()!,
-        widgetId: Math.floor(Math.random() * 1000),
-        widgetType: 'Sample Widget',
+        widget: this.widget,
       },
     });
   }

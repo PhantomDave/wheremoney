@@ -34,7 +34,12 @@ export class AccountService {
         this.api.post<Account>(`${this.baseAuthUrl}/register`, account),
       );
       // Registration successful
-      if (response && typeof response === 'object' && 'username' in response && 'email' in response) {
+      if (
+        response &&
+        typeof response === 'object' &&
+        'username' in response &&
+        'email' in response
+      ) {
         this._account.set(response as Account);
       }
     } catch (error) {
@@ -61,7 +66,12 @@ export class AccountService {
         this.api.put<Account>(`${this.baseAuthUrl}/${id}`, account),
       );
 
-      if (updatedAccount && typeof updatedAccount === 'object' && 'username' in updatedAccount && 'email' in updatedAccount) {
+      if (
+        updatedAccount &&
+        typeof updatedAccount === 'object' &&
+        'username' in updatedAccount &&
+        'email' in updatedAccount
+      ) {
         this._account.set(updatedAccount as Account);
         if (this._selectedAccount()?.id === (updatedAccount as Account).id) {
           this._selectedAccount.set(updatedAccount as Account);
@@ -107,11 +117,8 @@ export class AccountService {
         }),
       );
 
-      if (isValid && typeof isValid === 'object' && 'token' in isValid && 'account' in isValid) {
-        const authResponse = isValid as AuthResponse;
-        this._selectedAccount.set(authResponse.account);
-        this.setLoggedIn(authResponse.token);
-      }
+      this._selectedAccount.set(isValid.account);
+      this.setLoggedIn(isValid.token);
 
       return isValid && typeof isValid === 'object' && 'account' in isValid;
     } catch (error: unknown) {
