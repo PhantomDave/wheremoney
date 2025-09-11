@@ -28,8 +28,6 @@ export class PieChartComponent implements AfterViewInit {
 
   labels: string[] = this.mapWidgetData().map((d) => d.category);
   ngAfterViewInit(): void {
-    console.log('Data input:', this.data);
-
     const widgetData = this.mapWidgetData();
 
     console.log(this.mapChartData(widgetData[0]));
