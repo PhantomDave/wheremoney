@@ -1,9 +1,13 @@
-@if (isLoading && widget && data) {
+@if (isLoading) {
   <div class="d-flex justify-content-center align-items-center" style="height: 200px">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-} @else {
+} @else if (pieChartData.datasets.length > 0 && pieChartData.datasets[0].data.length > 0) {
   <canvas baseChart [data]="pieChartData" [type]="'pie'" [options]="pieChartOptions"> </canvas>
+} @else {
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+    <p>No data available for chart</p>
+  </div>
 }
