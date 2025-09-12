@@ -13,7 +13,17 @@
       </mat-select>
     </mat-form-field>
   </app-flex>
-
+  <app-flex direction="row" align="center" justify="space-between" gap="8px">
+    <p>Widget Type</p>
+    <mat-form-field>
+      <mat-label>Select Widget Type</mat-label>
+      <mat-select (selectionChange)="onWidgetTypeSelection($event.value)">
+        @for (type of widgetTypes; track $index) {
+          <mat-option [value]="type">{{ type }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </app-flex>
   <div class="column-selection">
     <mat-checkbox
       (change)="$event ? toggleAllRows() : null"
@@ -35,7 +45,7 @@
           {{ column.name }}
         </mat-checkbox>
         <mat-form-field>
-          <mat-label>Select type of aggregation</mat-label>
+          <mat-label>Select type of column</mat-label>
           <mat-select
             (selectionChange)="onTypeAggregationChange($event.value, column)"
             [value]="types[0]"

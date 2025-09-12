@@ -15,7 +15,6 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
-  MatDialogClose,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
@@ -26,7 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { Column } from '../../../../models/column';
 import { Table } from '../../../../models/table';
-import { Widget } from '../../../../models/widget';
+import { Widget, WidgetType } from '../../../../models/widget';
 import { TableService } from '../../../../services/table/table-service';
 import { Flex } from '../../../ui/flex/flex';
 import { WidgetService } from './../../../../services/widget/widget-service';
@@ -45,7 +44,6 @@ export interface ConfiguratorData {
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose,
     MatCheckboxModule,
     MatTableModule,
     MatSelectModule,
@@ -59,6 +57,13 @@ export class WidgetConfigurator implements OnInit {
   readonly dialogRef = inject(MatDialogRef<WidgetConfigurator>);
   readonly data = inject<ConfiguratorData>(MAT_DIALOG_DATA);
   readonly widget = model(this.data.widget);
+  readonly widgetTypes = [
+    WidgetType.BAR_CHART,
+    WidgetType.LINE_CHART,
+    WidgetType.PIE_CHART,
+    WidgetType.TABLE,
+    WidgetType.NUMBER_CARD,
+  ];
   readonly tableService = inject(TableService);
   readonly widgetService = inject(WidgetService);
 
@@ -99,6 +104,10 @@ export class WidgetConfigurator implements OnInit {
     this.selectedTableChanged.emit(table);
   }
 
+  onWidgetTypeSelection(type: WidgetType) {
+    this.widget().type = type;
+  }
+
   onTypeAggregationChange(value: string, column: Column) {
     if (this.selection.isSelected(column)) {
       this.mappedSelection[column.name] = value;
@@ -108,7 +117,7 @@ export class WidgetConfigurator implements OnInit {
   initialSelection = [];
   allowMultiSelect = true;
   selection = new SelectionModel<Column>(this.allowMultiSelect, this.initialSelection);
-  types = ['Sum', 'Average', 'Count', 'Max', 'Min'];
+  types = ['Label', 'Values'];
   mappedSelection: Record<string, string> = {};
 
   isAllSelected(): boolean {

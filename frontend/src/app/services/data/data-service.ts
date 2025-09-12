@@ -35,6 +35,7 @@ export class DataService {
       }
     } catch (error) {
       const apiError = error as ApiError;
+      console.error(error);
       if (apiError?.error?.message) {
         this._error.set(apiError.error.message);
       } else if (apiError?.message) {

@@ -37,8 +37,18 @@ export class WidgetWrapper implements OnInit {
 
   ngOnInit(): void {
     if (this.widget?.table_id) {
-      this.dataService.getDataByTableId(this.widget.table_id);
-      this.tableService.getTableById(this.widget.table_id);
+      this.loadWidgetData(this.widget.table_id);
+    }
+  }
+
+  private async loadWidgetData(tableId: number): Promise<void> {
+    try {
+      await Promise.all([
+        this.dataService.getDataByTableId(tableId),
+        this.tableService.getTableById(tableId),
+      ]);
+    } catch (error) {
+      console.error('Error loading widget data:', error);
     }
   }
 
