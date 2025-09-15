@@ -1,0 +1,13 @@
+@if (isLoading) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+} @else if (barChartData.datasets.length > 0 && barChartData.datasets[0].data.length > 0) {
+  <canvas baseChart [data]="barChartData" [type]="'bar'" [options]="barChartOptions"> </canvas>
+} @else {
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+    <p>No data available for chart</p>
+  </div>
+}

@@ -6,12 +6,12 @@ import { Widget, WidgetData } from '../../../../models/widget';
 import { InputData } from '../../widget-wrapper/widget-wrapper';
 
 @Component({
-  selector: 'app-pie-chart-component',
+  selector: 'app-bar-chart-component',
+  templateUrl: './bar-chart-component.component.html',
+  styleUrls: ['./bar-chart-component.component.css'],
   imports: [BaseChartDirective],
-  templateUrl: './pie-chart-component.html',
-  styleUrl: './pie-chart-component.css',
 })
-export class PieChartComponent implements OnInit {
+export class BarChartComponentComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   @Input() widget!: Widget;
@@ -21,27 +21,30 @@ export class PieChartComponent implements OnInit {
     data: [],
   };
   @Input() isLoading = true;
-
-  labelCount = 0;
-
-  @Input() pieChartOptions: ChartConfiguration['options'] = {
+  @Input() barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    scales: {
+      x: {},
+      y: {
+        min: 10,
+      },
+    },
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: 'bottom',
-        align: 'start',
       },
     },
   };
 
   widgetData: WidgetData | null = null;
 
-  pieChartData: ChartData<'pie', number[], string | string[]> = {
+  barChartData: ChartData<'bar', number[], string | string[]> = {
     labels: [],
     datasets: [{ data: [] }],
   };
 
   ngOnInit(): void {
+    // Parse widget data safely
     try {
       this.widgetData = JSON.parse(this.widget.widget_data) as WidgetData;
     } catch (error) {
@@ -66,7 +69,6 @@ export class PieChartComponent implements OnInit {
       const value = this.widgetData![key] as string;
       if (value && value === 'Label') {
         labels.push(key);
-        this.labelCount += 1;
       }
       if (value && value === 'Values') {
         values.push(key);
@@ -87,9 +89,9 @@ export class PieChartComponent implements OnInit {
       labels.forEach((labelCol) => {
         if (
           rowObj[labelCol] !== undefined &&
-          !this.pieChartData.labels?.includes(String(rowObj[labelCol]))
+          !this.barChartData.labels?.includes(String(rowObj[labelCol]))
         ) {
-          this.pieChartData.labels?.push(String(rowObj[labelCol]));
+          this.barChartData.labels?.push(String(rowObj[labelCol]));
           let summedValue = 0;
           this.data.data
             // @ts-expect-error - Temporarily ignoring index signature error
@@ -100,8 +102,7 @@ export class PieChartComponent implements OnInit {
               summedValue += value;
             });
 
-          // Add the summed value to the dataset
-          this.pieChartData.datasets[0].data.push(summedValue);
+          this.barChartData.datasets[0].data.push(summedValue);
         }
       });
     });

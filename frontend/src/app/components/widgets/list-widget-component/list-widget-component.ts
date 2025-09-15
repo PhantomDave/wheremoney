@@ -30,6 +30,6 @@ export class ListWidgetComponent implements OnInit {
 
   onDeleteWidget(id: number) {
     console.log('Delete widget with id:', id);
-    // this.widgetService.deleteWidget(id);
+    this.widgetService.deleteWidget(id);
   }
 }

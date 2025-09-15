@@ -11,6 +11,13 @@ import { TableService } from '../../../services/table/table-service';
 import { Flex } from '../../ui/flex/flex';
 import { PieChartComponent } from '../charts/pie-chart-component/pie-chart-component';
 import { WidgetConfigurator } from '../configurator/widget-configurator/widget-configurator';
+import { Column } from '../../../models/column';
+import { BarChartComponentComponent } from '../charts/bar-chart-component/bar-chart-component.component';
+
+export interface InputData {
+  columns: Column[];
+  data: unknown[];
+}
 
 @Component({
   selector: 'app-widget-wrapper',
@@ -23,6 +30,7 @@ import { WidgetConfigurator } from '../configurator/widget-configurator/widget-c
     MatIconModule,
     MatCheckboxModule,
     PieChartComponent,
+    BarChartComponentComponent,
   ],
   templateUrl: './widget-wrapper.html',
   styleUrl: './widget-wrapper.css',

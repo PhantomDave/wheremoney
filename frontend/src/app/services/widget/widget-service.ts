@@ -85,5 +85,17 @@ export class WidgetService {
     }
   }
 
-  // deleteWidget(id: number) {}
+  async deleteWidget(id: number) {
+    this._loading.set(true);
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.delete(`${this.baseWidgetUrl}/${id}`, {}, true));
+      this._widgets.update((widgets) => widgets.filter((widget) => widget.id !== id));
+    } catch (error) {
+      this._error.set('Failed to delete widget');
+      console.error('Error deleting widget:', error);
+    } finally {
+      this._loading.set(false);
+    }
+  }
 }
