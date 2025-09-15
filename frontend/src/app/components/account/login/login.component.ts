@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError, MatFormField, MatInput, MatLabel, MatSuffix } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -27,16 +27,16 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly accountService = inject(AccountService);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
+
   loginForm: FormGroup;
   submitted = false;
   showPassword = false;
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly accountService: AccountService,
-    private readonly router: Router,
-    private readonly snackBar: MatSnackBar,
-  ) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
