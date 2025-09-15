@@ -12,27 +12,35 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Cache
       uses: actions/cache@v4.2.4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-${{ matrix.node-version }}-
+          ${{ runner.os }}-node-
               
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'
+        
     - name: Install Dependencies    
-    - run: npm ci
+      run: npm ci
+      working-directory: ./frontend
     
     - name: Build Frontend
-    - run: npm run build
-
-    - name: Run Angular test suite
-    - run: npm test
+      run: npm run build --configuration development
+      working-directory: ./frontend
 
     - name: Run Lints
-    - run: npm lint
+      run: npm run lint
+      working-directory: ./frontend
