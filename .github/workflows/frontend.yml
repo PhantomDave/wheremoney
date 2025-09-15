@@ -38,7 +38,7 @@ jobs:
       working-directory: ./frontend
     
     - name: Build Frontend
-      run: npm run build --configuration development
+      run: npm run build
       working-directory: ./frontend
 
     - name: Run Lints
