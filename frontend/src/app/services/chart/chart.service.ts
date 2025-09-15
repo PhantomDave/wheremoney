@@ -91,11 +91,13 @@ export class ChartService {
             // Calculate sum of all values for this label
             let summedValue = 0;
             inputData.data
-              // @ts-expect-error - Temporarily ignoring index signature error
-              .filter((r) => r[labelCol] === rowObj[labelCol])
+              .filter((r) => {
+                const filterRow = r as Record<string, unknown>;
+                return filterRow[labelCol] === rowObj[labelCol];
+              })
               .forEach((otherRow) => {
-                // @ts-expect-error - Temporarily ignoring index signature error
-                const value = Number(otherRow[values[0]] as unknown);
+                const otherRowObj = otherRow as Record<string, unknown>;
+                const value = Number(otherRowObj[values[0]]);
                 if (!isNaN(value)) {
                   summedValue += value;
                 }
@@ -146,11 +148,13 @@ export class ChartService {
             // Calculate sum of all values for this label
             let summedValue = 0;
             inputData.data
-              // @ts-expect-error - Temporarily ignoring index signature error
-              .filter((r) => r[labelCol] === rowObj[labelCol])
+              .filter((r) => {
+                const filterRow = r as Record<string, unknown>;
+                return filterRow[labelCol] === rowObj[labelCol];
+              })
               .forEach((otherRow) => {
-                // @ts-expect-error - Temporarily ignoring index signature error
-                const value = Number(otherRow[values[0]] as unknown);
+                const otherRowObj = otherRow as Record<string, unknown>;
+                const value = Number(otherRowObj[values[0]]);
                 if (!isNaN(value)) {
                   summedValue += value;
                 }

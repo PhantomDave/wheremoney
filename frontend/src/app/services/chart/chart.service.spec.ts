@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { ChartService, ChartMappingResult, BarChartDataResult, PieChartDataResult } from './chart.service';
-import { WidgetData } from '../../models/widget';
 import { InputData } from '../../components/widgets/widget-wrapper/widget-wrapper';
 import { Column } from '../../models/column';
 
