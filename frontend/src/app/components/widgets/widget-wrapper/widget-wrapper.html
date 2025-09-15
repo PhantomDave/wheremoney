@@ -10,35 +10,37 @@
   }
 </app-flex>
 @if (widget && selectedTable && data && !isLoading) {
-  <app-flex
-    [direction]="'column'"
-    [align]="'center'"
-    [justify]="'center'"
-    [gap]="'16px'"
-    [className]="'widget-content'"
-  >
-    @switch (widget.type) {
-      @case (WidgetType.PIE_CHART) {
-        <app-pie-chart-component
-          [widget]="widget"
-          [table]="selectedTable"
-          [data]="data"
-          [isLoading]="isLoading"
-        />
+  <mat-card>
+    <app-flex
+      [direction]="'column'"
+      [align]="'center'"
+      [justify]="'center'"
+      [gap]="'16px'"
+      [className]="'widget-content'"
+      >{{ widget.name }}
+      @switch (widget.type) {
+        @case (WidgetType.PIE_CHART) {
+          <app-pie-chart-component
+            [widget]="widget"
+            [table]="selectedTable"
+            [data]="data"
+            [isLoading]="isLoading"
+          />
+        }
+        @case (WidgetType.BAR_CHART) {
+          <app-bar-chart-component
+            [widget]="widget"
+            [table]="selectedTable"
+            [data]="data"
+            [isLoading]="isLoading"
+          />
+        }
+        @default {
+          <p>Unknown widget type</p>
+        }
       }
-      @case (WidgetType.BAR_CHART) {
-        <app-bar-chart-component
-          [widget]="widget"
-          [table]="selectedTable"
-          [data]="data"
-          [isLoading]="isLoading"
-        />
-      }
-      @default {
-        <p>Unknown widget type</p>
-      }
-    }
-  </app-flex>
+    </app-flex>
+  </mat-card>
 } @else {
   <p>No data available for this widget.</p>
 }

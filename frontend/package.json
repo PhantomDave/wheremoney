@@ -32,6 +32,7 @@
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
     "chart.js": "^4.5.0",
+    "gridstack": "^12.3.3",
     "ng2-charts": "^8.0.0",
     "ngx-cookie-service": "^20.1.0",
     "prettier": "^3.6.2",

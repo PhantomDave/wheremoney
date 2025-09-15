@@ -13,6 +13,8 @@ import { PieChartComponent } from '../charts/pie-chart-component/pie-chart-compo
 import { WidgetConfigurator } from '../configurator/widget-configurator/widget-configurator';
 import { Column } from '../../../models/column';
 import { BarChartComponentComponent } from '../charts/bar-chart-component/bar-chart-component.component';
+import { BaseWidget } from 'gridstack/dist/angular';
+import { MatCard, MatCardModule } from '@angular/material/card';
 
 export interface InputData {
   columns: Column[];
@@ -31,12 +33,14 @@ export interface InputData {
     MatCheckboxModule,
     PieChartComponent,
     BarChartComponentComponent,
+    MatCard,
+    MatCardModule,
   ],
   templateUrl: './widget-wrapper.html',
   styleUrl: './widget-wrapper.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetWrapper implements OnInit {
+export class WidgetWrapper extends BaseWidget implements OnInit {
   readonly dialog = inject(MatDialog);
   readonly tableService = inject(TableService);
   readonly dataService = inject(DataService);

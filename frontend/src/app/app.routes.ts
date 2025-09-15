@@ -15,6 +15,7 @@ import { DataSelectionComponent } from './components/data/data-selection-compone
 import { ListWidgetComponent } from './components/widgets/list-widget-component/list-widget-component';
 import { WidgetDetailsComponent } from './components/widgets/widget-details-component/widget-details-component';
 import { CreateWidgetComponent } from './components/widgets/create-widget-component/create-widget-component';
+import { DashboardComponent } from './components/dashboard/dashboard-component/dashboard-component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'account/login' },
@@ -89,6 +90,12 @@ export const routes: Routes = [
     component: WidgetDetailsComponent,
     canActivate: [loggedGuardGuard],
     data: { breadcrumb: 'Widget Details' },
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [loggedGuardGuard],
+    data: { breadcrumb: 'Dashboard' },
   },
   { path: '404', component: NotFoundComponent, data: { breadcrumb: '404' } },
   { path: '**', redirectTo: '404' },
