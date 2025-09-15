@@ -1,9 +1,10 @@
-import { Component, input, OnInit, ViewChild } from '@angular/core';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { Component, computed, effect, input, viewChild, inject } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Table } from '../../../../models/table';
-import { Widget, WidgetData } from '../../../../models/widget';
+import { Widget } from '../../../../models/widget';
 import { InputData } from '../../widget-wrapper/widget-wrapper';
+import { ChartService } from '../../../../services/chart/chart.service';
 
 @Component({
   selector: 'app-bar-chart-component',
@@ -11,8 +12,10 @@ import { InputData } from '../../widget-wrapper/widget-wrapper';
   styleUrls: ['./bar-chart-component.component.css'],
   imports: [BaseChartDirective],
 })
-export class BarChartComponentComponent implements OnInit {
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+export class BarChartComponentComponent {
+  private chartService = inject(ChartService);
+  
+  chart = viewChild<BaseChartDirective>(BaseChartDirective);
 
   widget = input.required<Widget>();
   table = input.required<Table>();
@@ -38,75 +41,24 @@ export class BarChartComponentComponent implements OnInit {
     },
   });
 
-  widgetData: WidgetData | null = null;
+  // Computed property that processes chart data using the service
+  private chartResult = computed(() => 
+    this.chartService.processBarChartData(
+      this.widget().widget_data,
+      this.data()
+    )
+  );
 
-  barChartData: ChartData<'bar', number[], string | string[]> = {
-    labels: [],
-    datasets: [{ data: [] }],
-  };
+  // Expose chart data and hasData as computed properties
+  barChartData = computed(() => this.chartResult().chartData);
+  hasData = computed(() => this.chartResult().hasData);
 
-  ngOnInit(): void {
-    // Parse widget data safely
-    try {
-      this.widgetData = JSON.parse(this.widget().widget_data) as WidgetData;
-    } catch (error) {
-      console.error('Error parsing widget data:', error);
-      this.widgetData = null;
-    }
-
-    this.mapDataFromInput();
-  }
-
-  mapDataFromInput(): void {
-    const labels: string[] = [];
-    const values: string[] = [];
-
-    if (!this.widgetData || !this.data().data.length) {
-      console.log('No widget data or input data available');
-      return;
-    }
-
-    Object.keys(this.widgetData).forEach((key) => {
-      // @ts-expect-error - Temporarily ignoring index signature error
-      const value = this.widgetData![key] as string;
-      if (value && value === 'Label') {
-        labels.push(key);
+  constructor() {
+    // Effect to update chart when data changes
+    effect(() => {
+      if (this.chart() && this.hasData()) {
+        this.chart()?.update();
       }
-      if (value && value === 'Values') {
-        values.push(key);
-      }
-    });
-
-    this.mapDataForChart(labels, values);
-  }
-
-  mapDataForChart(labels: string[], values: string[]): void {
-    if (!labels.length || !values.length) {
-      console.log('No labels or values specified in widget data');
-      return;
-    }
-
-    this.data().data.forEach((row) => {
-      const rowObj = row as Record<string, unknown>;
-      labels.forEach((labelCol) => {
-        if (
-          rowObj[labelCol] !== undefined &&
-          !this.barChartData.labels?.includes(String(rowObj[labelCol]))
-        ) {
-          this.barChartData.labels?.push(String(rowObj[labelCol]));
-          let summedValue = 0;
-          this.data().data
-            // @ts-expect-error - Temporarily ignoring index signature error
-            .filter((r) => r[labelCol] === rowObj[labelCol])
-            .forEach((otherRow) => {
-              // @ts-expect-error - Temporarily ignoring index signature error
-              const value = Number(otherRow[values[0]] as unknown);
-              summedValue += value;
-            });
-
-          this.barChartData.datasets[0].data.push(summedValue);
-        }
-      });
     });
   }
 }
