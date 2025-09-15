@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ChartData } from 'chart.js';
-import { WidgetData } from '../../models/widget';
 import { InputData } from '../../components/widgets/widget-wrapper/widget-wrapper';
 
 export interface ChartMappingResult {
@@ -26,9 +25,9 @@ export class ChartService {
   /**
    * Safely parses widget data JSON string
    */
-  parseWidgetData(widgetDataString: string): WidgetData | null {
+  parseWidgetData(widgetDataString: string): Record<string, string> | null {
     try {
-      return JSON.parse(widgetDataString) as WidgetData;
+      return JSON.parse(widgetDataString) as Record<string, string>;
     } catch (error) {
       console.error('Error parsing widget data:', error);
       return null;
@@ -38,7 +37,7 @@ export class ChartService {
   /**
    * Extracts label and value column names from widget data
    */
-  extractColumnMappings(widgetData: WidgetData | null): ChartMappingResult {
+  extractColumnMappings(widgetData: Record<string, string> | null): ChartMappingResult {
     const labels: string[] = [];
     const values: string[] = [];
 
@@ -47,8 +46,7 @@ export class ChartService {
     }
 
     Object.keys(widgetData).forEach((key) => {
-      // @ts-expect-error - Temporarily ignoring index signature error
-      const value = widgetData[key] as string;
+      const value = widgetData[key];
       if (value === 'Label') {
         labels.push(key);
       }

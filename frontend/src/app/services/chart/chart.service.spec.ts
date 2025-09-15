@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ChartService, ChartMappingResult, BarChartDataResult, PieChartDataResult } from './chart.service';
 import { WidgetData } from '../../models/widget';
 import { InputData } from '../../components/widgets/widget-wrapper/widget-wrapper';
+import { Column } from '../../models/column';
 
 describe('ChartService', () => {
   let service: ChartService;
@@ -17,10 +18,10 @@ describe('ChartService', () => {
 
   describe('parseWidgetData', () => {
     it('should parse valid JSON widget data', () => {
-      const validJson = '{"column1": "Label", "column2": "Values"}';
+      const validJson = '{"category": "Label", "value": "Values"}';
       const result = service.parseWidgetData(validJson);
       
-      expect(result).toEqual({ column1: 'Label', column2: 'Values' });
+      expect(result).toEqual({ category: 'Label', value: 'Values' });
     });
 
     it('should return null for invalid JSON', () => {
@@ -39,7 +40,7 @@ describe('ChartService', () => {
 
   describe('extractColumnMappings', () => {
     it('should extract label and value columns correctly', () => {
-      const widgetData: WidgetData = {
+      const widgetData: Record<string, string> = {
         category: 'Label',
         amount: 'Values',
         description: 'Other'
@@ -52,7 +53,7 @@ describe('ChartService', () => {
     });
 
     it('should handle multiple label and value columns', () => {
-      const widgetData: WidgetData = {
+      const widgetData: Record<string, string> = {
         category1: 'Label',
         category2: 'Label',
         amount1: 'Values',
@@ -75,8 +76,13 @@ describe('ChartService', () => {
 
   describe('transformDataForBarChart', () => {
     it('should transform data correctly for bar chart', () => {
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [
           { category: 'Food', amount: 100 },
           { category: 'Transport', amount: 50 },
@@ -98,8 +104,13 @@ describe('ChartService', () => {
     });
 
     it('should return empty chart data when no labels provided', () => {
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [{ category: 'Food', amount: 100 }]
       };
 
@@ -111,8 +122,13 @@ describe('ChartService', () => {
     });
 
     it('should handle invalid numeric values gracefully', () => {
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [
           { category: 'Food', amount: 'invalid' },
           { category: 'Transport', amount: 50 }
@@ -131,8 +147,13 @@ describe('ChartService', () => {
 
   describe('transformDataForPieChart', () => {
     it('should transform data correctly for pie chart', () => {
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [
           { category: 'Food', amount: 100 },
           { category: 'Transport', amount: 50 },
@@ -157,8 +178,13 @@ describe('ChartService', () => {
   describe('processBarChartData', () => {
     it('should process bar chart data end-to-end', () => {
       const widgetDataString = '{"category": "Label", "amount": "Values"}';
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [
           { category: 'Food', amount: 100 },
           { category: 'Transport', amount: 50 }
@@ -173,8 +199,13 @@ describe('ChartService', () => {
     });
 
     it('should handle invalid widget data string', () => {
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [{ category: 'Food', amount: 100 }]
       };
 
@@ -189,8 +220,13 @@ describe('ChartService', () => {
   describe('processPieChartData', () => {
     it('should process pie chart data end-to-end', () => {
       const widgetDataString = '{"category": "Label", "amount": "Values"}';
+      const mockColumns: Column[] = [
+        { tableId: 1, name: 'category', data_type: 'string' },
+        { tableId: 1, name: 'amount', data_type: 'number' }
+      ];
+      
       const inputData: InputData = {
-        columns: ['category', 'amount'],
+        columns: mockColumns,
         data: [
           { category: 'Food', amount: 100 },
           { category: 'Transport', amount: 50 }
