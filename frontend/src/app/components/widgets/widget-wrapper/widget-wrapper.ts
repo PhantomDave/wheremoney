@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,11 +43,12 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
   readonly tableService = inject(TableService);
   readonly dataService = inject(DataService);
   readonly WidgetType = WidgetType;
-  @Input() widget!: Widget;
+  widget = input.required<Widget>();
 
   ngOnInit(): void {
-    if (this.widget?.table_id) {
-      this.loadWidgetData(this.widget.table_id);
+    const tableId = this.widget()?.table_id;
+    if (tableId) {
+      this.loadWidgetData(tableId);
     }
   }
 
@@ -75,10 +76,10 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
   }
 
   openSettings() {
-    if (this.widget) {
+    if (this.widget()) {
       this.dialog.open(WidgetConfigurator, {
         data: {
-          widget: this.widget,
+          widget: this.widget(),
         },
       });
     }

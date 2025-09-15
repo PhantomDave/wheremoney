@@ -1,4 +1,4 @@
-@if (isLoading) {
+@if (isLoading()) {
   <div class="chart-container loading-state">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -6,7 +6,7 @@
   </div>
 } @else if (barChartData.datasets.length > 0 && barChartData.datasets[0].data.length > 0) {
   <div class="chart-container">
-    <canvas baseChart [data]="barChartData" [type]="'bar'" [options]="barChartOptions"></canvas>
+    <canvas baseChart [data]="barChartData" [type]="'bar'" [options]="barChartOptions()"></canvas>
   </div>
 } @else {
   <div class="chart-container no-data-state">
