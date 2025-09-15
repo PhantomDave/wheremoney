@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Run Frontend build and lints
 
 on:
   push:
