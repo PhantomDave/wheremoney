@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
   model,
   OnInit,
   output,
@@ -67,19 +67,9 @@ export class WidgetConfigurator implements OnInit {
   readonly tableService = inject(TableService);
   readonly widgetService = inject(WidgetService);
 
-  @Input()
-  set selectedTable(value: Table | null | undefined) {
-    if (value !== undefined) {
-      this._selectedTable.set(value ?? null);
-    }
-  }
-
-  get selectedTable(): Table | null {
-    return this._selectedTable();
-  }
+  selectedTable = input<Table | null>(null);
 
   readonly selectedTableChanged = output<Table | null>();
-  private readonly _selectedTable = signal<Table | null>(null);
 
   onCheckboxClicked($event: MatCheckboxChange, column: Column) {
     this.selection.toggle(column);
@@ -100,7 +90,6 @@ export class WidgetConfigurator implements OnInit {
 
   onSelectionChange(value: number) {
     const table = this.tables.find((t) => t.id === value) || null;
-    this._selectedTable.set(table);
     this.selectedTableChanged.emit(table);
   }
 
@@ -122,7 +111,7 @@ export class WidgetConfigurator implements OnInit {
 
   isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numRows = this.selectedTable?.columns?.length || 0;
+    const numRows = this.selectedTable()?.columns?.length || 0;
     return numSelected === numRows;
   }
 
@@ -131,7 +120,7 @@ export class WidgetConfigurator implements OnInit {
       this.selection.clear();
       return;
     }
-    const columns = this.selectedTable?.columns ?? [];
+    const columns = this.selectedTable()?.columns ?? [];
     this.selection.select(...columns);
     columns.forEach((column) => {
       this.mappedSelection[column.name] = this.types[0];
@@ -146,7 +135,7 @@ export class WidgetConfigurator implements OnInit {
     const widget: Widget = {
       ...this.widget(),
       widget_data: JSON.stringify(this.mappedSelection),
-      table_id: this.selectedTable?.id,
+      table_id: this.selectedTable()?.id,
     };
     this.widgetService.updateWidget(widget);
     this.dialogRef.close(widget);

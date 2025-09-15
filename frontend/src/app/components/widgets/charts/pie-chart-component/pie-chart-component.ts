@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, input, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Table } from '../../../../models/table';
@@ -14,17 +14,17 @@ import { InputData } from '../../widget-wrapper/widget-wrapper';
 export class PieChartComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
-  @Input() widget!: Widget;
-  @Input() table!: Table;
-  @Input() data: InputData = {
+  widget = input.required<Widget>();
+  table = input.required<Table>();
+  data = input<InputData>({
     columns: [],
     data: [],
-  };
-  @Input() isLoading = true;
+  });
+  isLoading = input(true);
 
   labelCount = 0;
 
-  @Input() pieChartOptions: ChartConfiguration['options'] = {
+  pieChartOptions = input<ChartConfiguration['options']>({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -34,7 +34,7 @@ export class PieChartComponent implements OnInit {
         align: 'start',
       },
     },
-  };
+  });
 
   widgetData: WidgetData | null = null;
 
@@ -45,7 +45,7 @@ export class PieChartComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      this.widgetData = JSON.parse(this.widget.widget_data) as WidgetData;
+      this.widgetData = JSON.parse(this.widget().widget_data) as WidgetData;
     } catch (error) {
       console.error('Error parsing widget data:', error);
       this.widgetData = null;
@@ -58,7 +58,7 @@ export class PieChartComponent implements OnInit {
     const labels: string[] = [];
     const values: string[] = [];
 
-    if (!this.widgetData || !this.data.data.length) {
+    if (!this.widgetData || !this.data().data.length) {
       console.log('No widget data or input data available');
       return;
     }
@@ -84,7 +84,7 @@ export class PieChartComponent implements OnInit {
       return;
     }
 
-    this.data.data.forEach((row) => {
+    this.data().data.forEach((row) => {
       const rowObj = row as Record<string, unknown>;
       labels.forEach((labelCol) => {
         if (
@@ -93,7 +93,7 @@ export class PieChartComponent implements OnInit {
         ) {
           this.pieChartData.labels?.push(String(rowObj[labelCol]));
           let summedValue = 0;
-          this.data.data
+          this.data().data
             // @ts-expect-error - Temporarily ignoring index signature error
             .filter((r) => r[labelCol] === rowObj[labelCol])
             .forEach((otherRow) => {

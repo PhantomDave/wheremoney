@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 
 @Component({
   selector: 'app-flex',
@@ -8,30 +8,29 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class Flex {
   // direction: the CSS flex-direction
-  @Input() direction: 'row' | 'row-reverse' | 'column' | 'column-reverse' = 'row';
+  direction = input<'row' | 'row-reverse' | 'column' | 'column-reverse'>('row');
 
   // align-items
-  @Input() align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' = 'start';
+  align = input<'start' | 'center' | 'end' | 'stretch' | 'baseline'>('start');
 
   // justify-content
-  @Input() justify: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly' =
-    'start';
+  justify = input<'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly'>('start');
 
   // gap between items; accepts number (px) or string (e.g. '1rem')
-  @Input() gap: number | string = 0;
+  gap = input<number | string>(0);
 
   // wrap behavior
-  @Input() wrap: 'nowrap' | 'wrap' | 'wrap-reverse' = 'nowrap';
+  wrap = input<'nowrap' | 'wrap' | 'wrap-reverse'>('nowrap');
 
   // inline or block flex
-  @Input() inline = false;
+  inline = input(false);
 
   // additional classes to apply
-  @Input() className = '';
+  className = input('');
 
   // derived helpers used by the template
   get isNumericGap() {
-    return typeof this.gap === 'number';
+    return typeof this.gap() === 'number';
   }
 
   private mapAlign(value: string) {
@@ -58,14 +57,14 @@ export class Flex {
 
   // Exposed properties for template binding (camelCased for style bindings)
   get alignItems() {
-    return this.mapAlign(this.align);
+    return this.mapAlign(this.align());
   }
 
   get justifyContent() {
-    return this.mapJustify(this.justify);
+    return this.mapJustify(this.justify());
   }
 
   get containerClass() {
-    return ['app-flex', this.className].filter(Boolean).join(' ');
+    return ['app-flex', this.className()].filter(Boolean).join(' ');
   }
 }

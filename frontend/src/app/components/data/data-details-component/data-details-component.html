@@ -1,5 +1,5 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-  @for (column of table?.columns; track column.id) {
+  @for (column of table()?.columns; track column.id) {
     <ng-container [matColumnDef]="column.name.toString()">
       <th
         mat-header-cell

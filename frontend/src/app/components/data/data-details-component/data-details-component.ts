@@ -1,5 +1,5 @@
 // src/app/components/data/data-details-component/data-details-component.ts
-import { AfterViewInit, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../services/data/data-service';
 import { Table } from '../../../models/table';
@@ -20,7 +20,7 @@ export class DataDetailsComponent implements OnInit, AfterViewInit {
   private tableService = inject(TableService);
   private route = inject(ActivatedRoute);
 
-  @Input() table: Table | null = null;
+  table = input<Table | null>(null);
   @ViewChild(MatSort) sort!: MatSort;
 
   // Use a MatTableDataSource so assigning `sort` is type-correct
@@ -51,10 +51,11 @@ export class DataDetailsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
-      if (this.table?.id !== undefined) {
-        await this.dataService.getDataByTableId(this.table.id);
+      const tableId = this.table()?.id;
+      if (tableId !== undefined) {
+        await this.dataService.getDataByTableId(tableId);
       }
-      let selected = this.table;
+      let selected = this.table();
       if (!selected) {
         const id = params.get('id');
         const tableId = parseInt(id!, 10);
