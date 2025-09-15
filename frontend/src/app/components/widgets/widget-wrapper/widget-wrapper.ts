@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { Widget, WidgetType } from '../../../models/widget';
 import { DataService } from '../../../services/data/data-service';
 import { TableService } from '../../../services/table/table-service';
-import { Flex } from '../../ui/flex/flex';
 import { PieChartComponent } from '../charts/pie-chart-component/pie-chart-component';
 import { WidgetConfigurator } from '../configurator/widget-configurator/widget-configurator';
 import { Column } from '../../../models/column';
@@ -24,7 +23,6 @@ export interface InputData {
 @Component({
   selector: 'app-widget-wrapper',
   imports: [
-    Flex,
     MatFormFieldModule,
     MatDialogModule,
     MatSelectModule,

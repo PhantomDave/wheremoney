@@ -1,23 +1,20 @@
-<app-flex
-  [direction]="'row'"
-  [align]="'center'"
-  [justify]="'space-between'"
-  [gap]="'16px'"
-  [className]="'widget-wrapper'"
->
-  @if (widget) {
-    <mat-icon (click)="openSettings()" onkeydown="">settings</mat-icon>
-  }
-</app-flex>
-@if (widget && selectedTable && data && !isLoading) {
-  <mat-card>
-    <app-flex
-      [direction]="'column'"
-      [align]="'center'"
-      [justify]="'center'"
-      [gap]="'16px'"
-      [className]="'widget-content'"
-      >{{ widget.name }}
+<mat-card class="widget-card">
+  <mat-card-header class="widget-header">
+    <div class="drag-handle">
+      <mat-icon>drag_indicator</mat-icon>
+    </div>
+    <mat-card-title>{{ widget.name || 'Untitled Widget' }}</mat-card-title>
+    <div class="widget-actions">
+      @if (widget) {
+        <mat-icon (click)="openSettings()" (keydown)="openSettings()" class="settings-icon"
+          >settings</mat-icon
+        >
+      }
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="widget-content">
+    @if (widget && selectedTable && data && !isLoading) {
       @switch (widget.type) {
         @case (WidgetType.PIE_CHART) {
           <app-pie-chart-component
@@ -39,8 +36,8 @@
           <p>Unknown widget type</p>
         }
       }
-    </app-flex>
-  </mat-card>
-} @else {
-  <p>No data available for this widget.</p>
-}
+    } @else {
+      <p>No data available for this widget.</p>
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,26 @@
+.widget-card-button {
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.widget-card-button:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.widget-card {
+  margin: 4px;
+  box-shadow: 4px 4px var(--mat-sys-primary);
+  height: 64px;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.widget-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px var(--mat-sys-primary);
+}

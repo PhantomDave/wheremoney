@@ -1,0 +1,12 @@
+<button
+  class="widget-card-button"
+  (click)="addWidgetToDashboard(widget()!)"
+  [attr.aria-label]="'Add ' + widget()?.name + ' widget to dashboard'"
+>
+  <mat-card class="widget-card">
+    <app-flex [direction]="'column'" [align]="'center'" [justify]="'center'" [gap]="'16px'">
+      <h2>{{ widget()?.name }}</h2>
+      <p>{{ widget()?.description }}</p>
+    </app-flex>
+  </mat-card>
+</button>

@@ -1,4 +1,6 @@
-export interface Widget {
+import { NgGridStackWidget } from 'gridstack/dist/angular';
+
+export interface Widget extends Omit<NgGridStackWidget, 'id'> {
   id?: number;
   description?: string;
   name: string;

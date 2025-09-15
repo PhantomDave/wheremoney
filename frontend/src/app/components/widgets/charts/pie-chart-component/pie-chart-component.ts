@@ -25,6 +25,8 @@ export class PieChartComponent implements OnInit {
   labelCount = 0;
 
   @Input() pieChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,

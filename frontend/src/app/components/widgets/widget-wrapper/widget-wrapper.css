@@ -1,13 +1,80 @@
-.widget-content {
-  padding: 16px;
-  box-sizing: border-box;
-  border: 1px solid red;
-  height: 100%;
-}
-
-.widget-wrapper {
+.widget-card {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--mat-surface-container);
+  border-bottom: 1px solid #ddd;
+  min-height: 48px;
+  flex-shrink: 0;
+}
+
+.drag-handle {
+  cursor: move;
+  margin-right: 8px;
+  color: var(--mat-on-surface-variant);
+}
+
+.drag-handle:hover {
+  color: var(--mat-primary);
+}
+
+.widget-actions {
+  margin-left: auto;
+}
+
+.settings-icon {
+  cursor: pointer;
+  color: var(--mat-on-surface-variant);
+}
+
+.settings-icon:hover {
+  color: var(--mat-primary);
+}
+
+.widget-content {
+  flex: 1;
+  padding: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex children to shrink */
+}
+
+/* Ensure mat-card-content takes full space */
+mat-card-content.widget-content {
+  margin: 0 !important;
+  padding: 12px !important;
+}
+
+/* GridStack specific styling */
+.grid-stack-item {
+  border-radius: 8px;
+}
+
+.grid-stack-item-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Responsive sizing for different widget sizes */
+.grid-stack-item[data-gs-width="2"] .widget-content {
+  padding: 8px;
+}
+
+.grid-stack-item[data-gs-width="6"] .widget-content,
+.grid-stack-item[data-gs-width="8"] .widget-content {
+  padding: 16px;
 }
 
 

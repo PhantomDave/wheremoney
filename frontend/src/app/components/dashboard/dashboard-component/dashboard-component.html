@@ -1,5 +1,24 @@
-<h1>WhereMoney Dashboard</h1>
-<p>Financial data visualization dashboard</p>
-<gridstack class="dashboard" [options]="gridOptions">
-  <div empty-content>Add widgets to get started with your dashboard</div>
-</gridstack>
+@if (loading) {
+  <div class="loading">
+    <mat-icon class="spinner" svgIcon="spinner"></mat-icon>
+  </div>
+} @else {
+  <app-dashboard-drawer-component
+    [isOpen]="isOpen"
+    [widgets]="widgets"
+    (addWidgetToDashboardEvent)="addWidgetToDashboard($event)"
+    (toggleDrawerEvent)="toggleDrawer()"
+  >
+    <h1>WhereMoney Dashboard</h1>
+    <p>Financial data visualization dashboard</p>
+    <gridstack
+      class="dashboard"
+      [options]="gridOptions"
+      (change)="onWidgetChange($event)"
+      (added)="onWidgetAdded($event)"
+      (removed)="onWidgetRemoved($event)"
+    >
+      <div empty-content>Add widgets to get started with your dashboard</div>
+    </gridstack>
+  </app-dashboard-drawer-component>
+}

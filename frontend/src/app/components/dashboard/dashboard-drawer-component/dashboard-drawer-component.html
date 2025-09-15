@@ -1,0 +1,33 @@
+<mat-drawer-container class="full-height">
+  <mat-drawer mode="over" position="end" [opened]="isOpen()">
+    @for (widget of widgets(); track widget.id) {
+      <app-dashboard-drawer-widget
+        [widget]="widget"
+        (addWidgetToDashboardEvent)="onAddWidgetToDashboard($event)"
+      ></app-dashboard-drawer-widget>
+    }
+    @if (widgets().length === 0) {
+      <p class="no-widgets">
+        No widgets available. <a routerLink="/widget/create">Create a widget</a>.
+      </p>
+    }
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+    <app-flex
+      [direction]="'column'"
+      [align]="'end'"
+      [justify]="'space-between'"
+      [gap]="'16px'"
+      [className]="'widget-wrapper'"
+    >
+      <button
+        class="settings-button"
+        (click)="toggleDrawer()"
+        [attr.aria-label]="isOpen() ? 'Close widget drawer' : 'Open widget drawer'"
+      >
+        <mat-icon>settings</mat-icon>
+      </button>
+    </app-flex>
+  </mat-drawer-content>
+</mat-drawer-container>

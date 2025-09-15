@@ -22,6 +22,8 @@ export class BarChartComponentComponent implements OnInit {
   };
   @Input() isLoading = true;
   @Input() barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {},
       y: {

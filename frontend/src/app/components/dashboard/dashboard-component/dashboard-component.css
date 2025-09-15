@@ -1,6 +1,76 @@
 .dashboard {
-  background: var(--mat-on-surface);
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
+  background: var(--mat-sys-on-surface);
+  border: 1px solid var(--mat-outline-variant);
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 500px;
+  width: 100%;
+  overflow: auto;
+}
+
+/* GridStack widget styling */
+.grid-stack-item {
+  background: transparent;
+}
+
+.grid-stack-item-content {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.grid-stack-item-content:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Drag placeholder styling */
+.grid-stack-placeholder {
+  background: var(--mat-primary-container) !important;
+  border: 2px dashed var(--mat-primary) !important;
+  border-radius: 8px !important;
+  opacity: 0.7 !important;
+}
+
+/* Resize handle styling */
+.ui-resizable-handle {
+  background: var(--mat-primary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.grid-stack-item:hover .ui-resizable-handle {
+  opacity: 0.7;
+}
+
+.ui-resizable-se {
+  width: 12px;
+  height: 12px;
+  right: 1px;
+  bottom: 1px;
+  border-radius: 0 0 8px 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.spinner {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 8px;
+    min-height: 400px;
+  }
 }
