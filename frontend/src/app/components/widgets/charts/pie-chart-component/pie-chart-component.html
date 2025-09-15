@@ -4,9 +4,9 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-} @else if (pieChartData.datasets.length > 0 && pieChartData.datasets[0].data.length > 0) {
+} @else if (hasData()) {
   <div class="chart-container">
-    <canvas baseChart [data]="pieChartData" [type]="'pie'" [options]="pieChartOptions()"></canvas>
+    <canvas baseChart [data]="pieChartData()" [type]="'pie'" [options]="pieChartOptions()"></canvas>
   </div>
 } @else {
   <div class="chart-container no-data-state">
