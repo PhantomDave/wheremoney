@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PieChartComponent } from './pie-chart-component';
-import { Widget, WidgetType } from '../../../../models/widget';
+import { WidgetType } from '../../../../models/widget';
 import { Column } from '../../../../models/column';
 
 describe('PieChartComponent', () => {

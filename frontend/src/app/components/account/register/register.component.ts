@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -35,16 +35,16 @@ import { AccountService } from '../../../services/profile/account-service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly accountService = inject(AccountService);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
+
   registerForm: FormGroup;
   submitted = false;
   showPassword = false;
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly accountService: AccountService,
-    private readonly router: Router,
-    private readonly snackBar: MatSnackBar,
-  ) {
+  constructor() {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
