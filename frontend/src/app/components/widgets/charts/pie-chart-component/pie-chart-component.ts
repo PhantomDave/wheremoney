@@ -43,16 +43,9 @@ export class PieChartComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    console.log('Widget:', this.widget);
-    console.log('Table:', this.table);
-    console.log('Data:', this.data);
-    console.log('Is Loading:', this.isLoading);
-    console.log('Pie Chart Options:', this.pieChartOptions);
-
     // Parse widget data safely
     try {
       this.widgetData = JSON.parse(this.widget.widget_data) as WidgetData;
-      console.log('Widget Data:', this.widgetData);
     } catch (error) {
       console.error('Error parsing widget data:', error);
       this.widgetData = null;
@@ -62,8 +55,6 @@ export class PieChartComponent implements OnInit {
   }
 
   mapDataFromInput(): void {
-    console.log('Mapping data from input...');
-    console.log('Widget Data:', this.widgetData);
     const labels: string[] = [];
     const values: string[] = [];
 
@@ -79,20 +70,14 @@ export class PieChartComponent implements OnInit {
         labels.push(key);
       }
       if (value && value === 'Values') {
-        values.push(String(value));
+        values.push(key);
       }
     });
 
     this.mapDataForChart(labels, values);
-
-    console.log('Chart data updated:', this.pieChartData);
   }
 
   mapDataForChart(labels: string[], values: string[]): void {
-    console.log('Mapping data for chart...');
-    console.log('Labels:', labels);
-    console.log('Values:', values);
-
     if (!labels.length || !values.length) {
       console.log('No labels or values specified in widget data');
       return;
@@ -106,20 +91,20 @@ export class PieChartComponent implements OnInit {
           !this.pieChartData.labels?.includes(String(rowObj[labelCol]))
         ) {
           this.pieChartData.labels?.push(String(rowObj[labelCol]));
-        }
-      });
+          let summedValue = 0;
+          this.data.data
+            // @ts-expect-error - Temporarily ignoring index signature error
+            .filter((r) => r[labelCol] === rowObj[labelCol])
+            .forEach((otherRow) => {
+              // @ts-expect-error - Temporarily ignoring index signature error
+              const value = Number(otherRow[values[0]] as unknown);
+              summedValue += value;
+            });
 
-      values.forEach((valueCol) => {
-        console.log('Processing value column:', valueCol, 'Value:', rowObj[valueCol]);
-        if (rowObj[valueCol] !== undefined) {
-          const value = Number(rowObj[valueCol]);
-          if (!isNaN(value)) {
-            this.pieChartData.datasets[0].data.push(value);
-          }
+          // Add the summed value to the dataset
+          this.pieChartData.datasets[0].data.push(summedValue);
         }
       });
     });
-
-    console.log('Final chart data:', this.pieChartData);
   }
 }
