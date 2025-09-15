@@ -7,7 +7,6 @@ import {
   model,
   OnInit,
   output,
-  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
