@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, effect, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget } from 'gridstack/dist/angular';
 import { Widget } from '../../../models/widget';
@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit {
       BarChartComponentComponent,
     ]);
   }
+
+  private readonly addedWidgetIds = new Set<string>();
 
   addWidgetToDashboard(widget: Widget) {
     const dashboardWidget: NgGridStackWidget = {
@@ -68,7 +70,43 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Load widgets from the API
     this.widgetService.getAllUserWidgets();
+
+    // React to the widgets signal and add them to the Gridstack children
+    effect(() => {
+      const widgets = this.widgetService.widgets();
+      if (!widgets || widgets.length === 0) return;
+
+      // Build dashboardWidgets from widgets, avoiding duplicates
+      const newChildren: NgGridStackWidget[] = [];
+      for (const widget of widgets) {
+        const id = widget.id?.toString() ?? `w-${Math.random().toString(36).slice(2, 9)}`;
+        if (this.addedWidgetIds.has(id)) continue;
+        this.addedWidgetIds.add(id);
+        newChildren.push({
+          x: 0,
+          y: 0,
+          w: 6,
+          h: 4,
+          minW: 3,
+          minH: 3,
+          maxW: 12,
+          maxH: 8,
+          id: id,
+          selector: 'app-widget-wrapper',
+          input: { widget: widget },
+        });
+      }
+
+      if (newChildren.length > 0) {
+        this.dashboardWidgets = [...this.dashboardWidgets, ...newChildren];
+        this.gridOptions = {
+          ...this.gridOptions,
+          children: [...this.dashboardWidgets],
+        };
+      }
+    });
   }
 
   get widgets(): Widget[] {

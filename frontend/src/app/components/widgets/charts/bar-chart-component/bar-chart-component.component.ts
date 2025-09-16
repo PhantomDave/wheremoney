@@ -13,8 +13,8 @@ import { ChartService } from '../../../../services/chart/chart.service';
   imports: [BaseChartDirective],
 })
 export class BarChartComponentComponent {
-  private chartService = inject(ChartService);
-  
+  private readonly chartService = inject(ChartService);
+
   chart = viewChild<BaseChartDirective>(BaseChartDirective);
 
   widget = input.required<Widget>();
@@ -42,11 +42,8 @@ export class BarChartComponentComponent {
   });
 
   // Computed property that processes chart data using the service
-  private chartResult = computed(() => 
-    this.chartService.processBarChartData(
-      this.widget().widget_data,
-      this.data()
-    )
+  chartResult = computed(() =>
+    this.chartService.processBarChartData(this.widget().widget_data, this.data()),
   );
 
   // Expose chart data and hasData as computed properties

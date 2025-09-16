@@ -18,13 +18,9 @@ export interface PieChartDataResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChartService {
-
-  /**
-   * Safely parses widget data JSON string
-   */
   parseWidgetData(widgetDataString: string): Record<string, string> | null {
     try {
       return JSON.parse(widgetDataString) as Record<string, string>;
@@ -64,7 +60,7 @@ export class ChartService {
   transformDataForBarChart(
     inputData: InputData,
     labels: string[],
-    values: string[]
+    values: string[],
   ): BarChartDataResult {
     const chartData: ChartData<'bar', number[], string> = {
       labels: [],
@@ -79,15 +75,15 @@ export class ChartService {
     // Process each row of data
     inputData.data.forEach((row) => {
       const rowObj = row as Record<string, unknown>;
-      
+
       labels.forEach((labelCol) => {
         if (rowObj[labelCol] !== undefined) {
           const labelValue = String(rowObj[labelCol]);
-          
+
           // Check if this label already exists in our chart data
           if (!chartData.labels?.includes(labelValue)) {
             chartData.labels?.push(labelValue);
-            
+
             // Calculate sum of all values for this label
             let summedValue = 0;
             inputData.data
@@ -111,7 +107,7 @@ export class ChartService {
 
     return {
       chartData,
-      hasData: chartData.datasets[0].data.length > 0
+      hasData: chartData.datasets[0].data.length > 0,
     };
   }
 
@@ -121,7 +117,7 @@ export class ChartService {
   transformDataForPieChart(
     inputData: InputData,
     labels: string[],
-    values: string[]
+    values: string[],
   ): PieChartDataResult {
     const chartData: ChartData<'pie', number[], string> = {
       labels: [],
@@ -136,15 +132,15 @@ export class ChartService {
     // Process each row of data (same logic as bar chart)
     inputData.data.forEach((row) => {
       const rowObj = row as Record<string, unknown>;
-      
+
       labels.forEach((labelCol) => {
         if (rowObj[labelCol] !== undefined) {
           const labelValue = String(rowObj[labelCol]);
-          
+
           // Check if this label already exists in our chart data
           if (!chartData.labels?.includes(labelValue)) {
             chartData.labels?.push(labelValue);
-            
+
             // Calculate sum of all values for this label
             let summedValue = 0;
             inputData.data
@@ -168,24 +164,21 @@ export class ChartService {
 
     return {
       chartData,
-      hasData: chartData.datasets[0].data.length > 0
+      hasData: chartData.datasets[0].data.length > 0,
     };
   }
 
   /**
    * Complete data processing pipeline for bar charts
    */
-  processBarChartData(
-    widgetDataString: string,
-    inputData: InputData
-  ): BarChartDataResult {
+  processBarChartData(widgetDataString: string, inputData: InputData): BarChartDataResult {
     // Step 1: Parse widget data
     const widgetData = this.parseWidgetData(widgetDataString);
-    
+
     if (!widgetData) {
       return {
         chartData: { labels: [], datasets: [{ data: [] }] },
-        hasData: false
+        hasData: false,
       };
     }
 
@@ -199,17 +192,14 @@ export class ChartService {
   /**
    * Complete data processing pipeline for pie charts
    */
-  processPieChartData(
-    widgetDataString: string,
-    inputData: InputData
-  ): PieChartDataResult {
+  processPieChartData(widgetDataString: string, inputData: InputData): PieChartDataResult {
     // Step 1: Parse widget data
     const widgetData = this.parseWidgetData(widgetDataString);
-    
+
     if (!widgetData) {
       return {
         chartData: { labels: [], datasets: [{ data: [] }] },
-        hasData: false
+        hasData: false,
       };
     }
 

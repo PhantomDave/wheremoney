@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,7 @@ import { Column } from '../../../models/column';
 import { BarChartComponentComponent } from '../charts/bar-chart-component/bar-chart-component.component';
 import { BaseWidget } from 'gridstack/dist/angular';
 import { MatCard, MatCardModule } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export interface InputData {
   columns: Column[];
@@ -33,6 +34,7 @@ export interface InputData {
     BarChartComponentComponent,
     MatCard,
     MatCardModule,
+    MatProgressSpinner,
   ],
   templateUrl: './widget-wrapper.html',
   styleUrl: './widget-wrapper.css',
@@ -44,11 +46,15 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
   readonly dataService = inject(DataService);
   readonly WidgetType = WidgetType;
   widget = input.required<Widget>();
+  private lastLoadedTableId: number | null = null;
 
   ngOnInit(): void {
+    console.log('WidgetWrapper initialized with widget:', this.widget());
     const tableId = this.widget()?.table_id;
-    if (tableId) {
-      this.loadWidgetData(tableId);
+
+    if (tableId && tableId !== this.lastLoadedTableId) {
+      this.lastLoadedTableId = tableId;
+      void this.loadWidgetData(tableId);
     }
   }
 
