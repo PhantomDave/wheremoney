@@ -30,7 +30,6 @@ class WidgetList(Resource):
     def post(self):
         data = request.get_json() or {}
         
-        print(data)
         new_widget = Widget(
             name=data.get('name'),
             owner_id=g.current_user,

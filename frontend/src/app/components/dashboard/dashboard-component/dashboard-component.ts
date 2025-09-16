@@ -1,4 +1,4 @@
-import { Component, inject, effect, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget } from 'gridstack/dist/angular';
 import { Widget } from '../../../models/widget';
@@ -64,29 +64,22 @@ export class DashboardComponent implements OnInit {
       children: [...this.dashboardWidgets],
     };
     this.isOpen = false;
-    console.log('DashboardComponent.addWidgetToDashboard: pushed dashboardWidget', dashboardWidget);
   }
 
   toggleDrawer() {
     this.isOpen = !this.isOpen;
   }
 
-  onWidgetChange(event: Event) {
-    console.log('Widget changed:', event);
+  onWidgetChange() {
     // Here you could implement logic to save widget positions to the backend
   }
 
-  onWidgetAdded(event: Event) {
-    console.log('Widget added (Gridstack event):', event);
-    // attempt to inspect event target (narrowed typing)
-    const possibleTarget =
-      (event as unknown as { target?: unknown })?.target ??
-      (event as unknown as { nativeEvent?: { target?: unknown } })?.nativeEvent?.target;
-    console.log('Event target element:', possibleTarget);
+  onWidgetAdded() {
+    // Placeholder for widget added event handling
   }
 
-  onWidgetRemoved(event: Event) {
-    console.log('Widget removed:', event);
+  onWidgetRemoved() {
+    // Placeholder for widget removed event handling
   }
 
   ngOnInit(): void {

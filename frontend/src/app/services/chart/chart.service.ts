@@ -68,7 +68,6 @@ export class ChartService {
     };
 
     if (!labels.length || !values.length || !inputData.data.length) {
-      console.log('No labels, values, or input data available for chart transformation');
       return { chartData, hasData: false };
     }
 
@@ -125,7 +124,6 @@ export class ChartService {
     };
 
     if (!labels.length || !values.length || !inputData.data.length) {
-      console.log('No labels, values, or input data available for chart transformation');
       return { chartData, hasData: false };
     }
 
