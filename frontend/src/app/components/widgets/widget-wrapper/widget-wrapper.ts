@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,7 +40,7 @@ export interface InputData {
   styleUrl: './widget-wrapper.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetWrapper extends BaseWidget implements OnInit {
+export class WidgetWrapper extends BaseWidget {
   readonly dialog = inject(MatDialog);
   readonly tableService = inject(TableService);
   readonly dataService = inject(DataService);
@@ -50,7 +50,6 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
 
   constructor() {
     super();
-    console.log('WidgetWrapper constructor, widget signal currently:', this.widget);
     // Use an effect in the constructor (injection context) to react to widget input
     effect(() => {
       const tableId = this.widgetValue()?.table_id;
@@ -72,9 +71,6 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
       // fallthrough to return the raw value
     }
     return this.widget as unknown as Widget;
-  }
-  ngOnInit(): void {
-    console.log('WidgetWrapper initialized with widget (start):', this.widgetValue());
   }
 
   private async loadWidgetData(tableId: number): Promise<void> {

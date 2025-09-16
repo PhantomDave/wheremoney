@@ -40,7 +40,6 @@ class Widget(db.Model):
             db.session.add(self)
             db.session.commit()
         except Exception as e:
-            print(f"Error checking existing widget: {e}")
             raise
         return self
     
@@ -55,5 +54,4 @@ class Widget(db.Model):
             return self
         except Exception as e:
             db.session.rollback()
-            print(f"Error updating widget: {e}")
             raise

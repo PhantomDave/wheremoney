@@ -124,9 +124,7 @@ class XLSXUpload(Resource):
             except Exception as e:
                 if os.path.exists(filepath):
                     os.remove(filepath)
-                print(e)
                 return {'error': f'Error processing XLSX file: {str(e)}'}, 400
 
         except Exception as e:
-            print(e)
             return {'error': f'Upload failed: {str(e)}'}, 500

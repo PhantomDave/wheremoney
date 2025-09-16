@@ -59,7 +59,6 @@ class Table(db.Model):
             return {'message': 'Table deleted successfully'}
         except Exception as e:
             db.session.rollback()
-            print("Error deleting table:", e)
             return {'error': str(e)}
 
     def createdatabasetable(self):
@@ -81,7 +80,6 @@ class Table(db.Model):
                             f'in the database'}
         except Exception as e:
             db.session.rollback()
-            print("Error creating table:", e)
             return {'error': str(e)}
 
     def populate_from_sheets(self, sheets_data):
@@ -111,7 +109,6 @@ class Table(db.Model):
             return {'message': 'Data populated successfully'}
         except Exception as e:
             db.session.rollback()
-            print("Error populating data:", e)
             return {'error': "Error parsing table column"}
 
     def getdata(self):
@@ -130,7 +127,6 @@ class Table(db.Model):
                 rows.append(row_dict)
             return rows
         except Exception as e:
-            print("Error retrieving data:", e)
             return {'error': str(e)}
 
 
