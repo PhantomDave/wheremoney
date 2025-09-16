@@ -17,7 +17,7 @@ export class BarChartComponentComponent {
 
   chart = viewChild<BaseChartDirective>(BaseChartDirective);
 
-  widget = input.required<Widget>();
+  widget = input<Widget>();
   table = input.required<Table>();
   data = input<InputData>({
     columns: [],
@@ -42,8 +42,18 @@ export class BarChartComponentComponent {
   });
 
   // Computed property that processes chart data using the service
+  widgetValue(): Widget | undefined {
+    try {
+      const maybeFn = this.widget as unknown as () => Widget | undefined;
+      if (typeof maybeFn === 'function') return maybeFn();
+    } catch {
+      // fallthrough
+    }
+    return this.widget as unknown as Widget;
+  }
+
   chartResult = computed(() =>
-    this.chartService.processBarChartData(this.widget().widget_data, this.data()),
+    this.chartService.processBarChartData(this.widgetValue()?.widget_data ?? '', this.data()),
   );
 
   // Expose chart data and hasData as computed properties

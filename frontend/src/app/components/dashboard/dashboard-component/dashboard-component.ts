@@ -10,22 +10,36 @@ import { WidgetService } from '../../../services/widget/widget-service';
 
 @Component({
   selector: 'app-dashboard-component',
-  imports: [GridstackComponent, MatIconModule, DashboardDrawerComponent],
+  // Include widget components so Angular can resolve and instantiate them
+  // when Gridstack dynamically inserts them via the selector.
+  imports: [
+    GridstackComponent,
+    MatIconModule,
+    DashboardDrawerComponent,
+    WidgetWrapper,
+    PieChartComponent,
+    BarChartComponentComponent,
+  ],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
 export class DashboardComponent implements OnInit {
+  private static gridstackRegistered = false;
   readonly widgetService = inject(WidgetService);
 
   isOpen = false;
   dashboardWidgets: NgGridStackWidget[] = [];
 
   constructor() {
-    GridstackComponent.addComponentToSelectorType([
-      WidgetWrapper,
-      PieChartComponent,
-      BarChartComponentComponent,
-    ]);
+    // Ensure we only register the component types with Gridstack once
+    if (!DashboardComponent.gridstackRegistered) {
+      GridstackComponent.addComponentToSelectorType([
+        WidgetWrapper,
+        PieChartComponent,
+        BarChartComponentComponent,
+      ]);
+      DashboardComponent.gridstackRegistered = true;
+    }
   }
 
   private readonly addedWidgetIds = new Set<string>();
@@ -50,6 +64,7 @@ export class DashboardComponent implements OnInit {
       children: [...this.dashboardWidgets],
     };
     this.isOpen = false;
+    console.log('DashboardComponent.addWidgetToDashboard: pushed dashboardWidget', dashboardWidget);
   }
 
   toggleDrawer() {
@@ -62,7 +77,12 @@ export class DashboardComponent implements OnInit {
   }
 
   onWidgetAdded(event: Event) {
-    console.log('Widget added:', event);
+    console.log('Widget added (Gridstack event):', event);
+    // attempt to inspect event target (narrowed typing)
+    const possibleTarget =
+      (event as unknown as { target?: unknown })?.target ??
+      (event as unknown as { nativeEvent?: { target?: unknown } })?.nativeEvent?.target;
+    console.log('Event target element:', possibleTarget);
   }
 
   onWidgetRemoved(event: Event) {
@@ -74,39 +94,37 @@ export class DashboardComponent implements OnInit {
     this.widgetService.getAllUserWidgets();
 
     // React to the widgets signal and add them to the Gridstack children
-    effect(() => {
-      const widgets = this.widgetService.widgets();
-      if (!widgets || widgets.length === 0) return;
+    const widgets = this.widgetService.widgets();
+    if (!widgets || widgets.length === 0) return;
 
-      // Build dashboardWidgets from widgets, avoiding duplicates
-      const newChildren: NgGridStackWidget[] = [];
-      for (const widget of widgets) {
-        const id = widget.id?.toString() ?? `w-${Math.random().toString(36).slice(2, 9)}`;
-        if (this.addedWidgetIds.has(id)) continue;
-        this.addedWidgetIds.add(id);
-        newChildren.push({
-          x: 0,
-          y: 0,
-          w: 6,
-          h: 4,
-          minW: 3,
-          minH: 3,
-          maxW: 12,
-          maxH: 8,
-          id: id,
-          selector: 'app-widget-wrapper',
-          input: { widget: widget },
-        });
-      }
+    // Build dashboardWidgets from widgets, avoiding duplicates
+    const newChildren: NgGridStackWidget[] = [];
+    for (const widget of widgets) {
+      const id = widget.id?.toString() ?? `w-${Math.random().toString(36).slice(2, 9)}`;
+      if (this.addedWidgetIds.has(id)) continue;
+      this.addedWidgetIds.add(id);
+      newChildren.push({
+        x: 0,
+        y: 0,
+        w: 6,
+        h: 4,
+        minW: 3,
+        minH: 3,
+        maxW: 12,
+        maxH: 8,
+        id: id,
+        selector: 'app-widget-wrapper',
+        input: { widget: widget },
+      });
+    }
 
-      if (newChildren.length > 0) {
-        this.dashboardWidgets = [...this.dashboardWidgets, ...newChildren];
-        this.gridOptions = {
-          ...this.gridOptions,
-          children: [...this.dashboardWidgets],
-        };
-      }
-    });
+    if (newChildren.length > 0) {
+      this.dashboardWidgets = [...this.dashboardWidgets, ...newChildren];
+      this.gridOptions = {
+        ...this.gridOptions,
+        children: [...this.dashboardWidgets],
+      };
+    }
   }
 
   get widgets(): Widget[] {

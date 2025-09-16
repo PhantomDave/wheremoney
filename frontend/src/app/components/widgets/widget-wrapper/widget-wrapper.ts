@@ -48,14 +48,33 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
   widget = input.required<Widget>();
   private lastLoadedTableId: number | null = null;
 
-  ngOnInit(): void {
-    console.log('WidgetWrapper initialized with widget:', this.widget());
-    const tableId = this.widget()?.table_id;
-
-    if (tableId && tableId !== this.lastLoadedTableId) {
-      this.lastLoadedTableId = tableId;
-      void this.loadWidgetData(tableId);
+  constructor() {
+    super();
+    console.log('WidgetWrapper constructor, widget signal currently:', this.widget);
+    // Use an effect in the constructor (injection context) to react to widget input
+    effect(() => {
+      const tableId = this.widgetValue()?.table_id;
+      if (tableId && tableId !== this.lastLoadedTableId) {
+        this.lastLoadedTableId = tableId;
+        void this.loadWidgetData(tableId);
+      }
+    });
+  }
+  // Helper to accept either a signal (callable) or a plain object passed by Gridstack.
+  widgetValue(): Widget | undefined {
+    // If widget is a signal (function), call it; otherwise return it directly
+    // (Gridstack may pass a plain object).
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const maybeFn = this.widget as unknown as any;
+      if (typeof maybeFn === 'function') return maybeFn();
+    } catch {
+      // fallthrough to return the raw value
     }
+    return this.widget as unknown as Widget;
+  }
+  ngOnInit(): void {
+    console.log('WidgetWrapper initialized with widget (start):', this.widgetValue());
   }
 
   private async loadWidgetData(tableId: number): Promise<void> {
@@ -82,10 +101,11 @@ export class WidgetWrapper extends BaseWidget implements OnInit {
   }
 
   openSettings() {
-    if (this.widget()) {
+    const w = this.widgetValue();
+    if (w) {
       this.dialog.open(WidgetConfigurator, {
         data: {
-          widget: this.widget(),
+          widget: w,
         },
       });
     }
