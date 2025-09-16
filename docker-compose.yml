@@ -13,7 +13,10 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL
+      # Use the compose-provided DATABASE_URL or fall back to a value that points
+      # to the `db` service. The double dollar in the db healthcheck uses an extra
+      # escape so shell interpolation in this file doesn't happen during `docker-compose`.
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/postgres}
     networks:
       - backend
     ports:
@@ -41,9 +44,11 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      # Provide sensible defaults for local development. These can be overridden
+      # by exporting env vars or using a .env file next to this compose file.
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

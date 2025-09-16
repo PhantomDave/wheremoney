@@ -1,0 +1,43 @@
+{
+  "name": "WhereMoney Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "workspaceFolder": "/workspaces/wheremoney",
+  "forwardPorts": [5000, 4200, 5432, 5050],
+  "postCreateCommand": "chmod +x /workspaces/wheremoney/setup-dev-env.sh && /workspaces/wheremoney/setup-dev-env.sh",
+  "postStartCommand": "cd /workspaces/wheremoney && docker compose up db -d",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "angular.angular-language-service",
+        "johnpapa.angular-essentials",
+        "angular.ng-template",
+        "ms-vscode.vscode-typescript-next",
+        "msjsdiag.debugger-for-chrome",
+        "orta.vscode-jest",
+        "batisteo.vscode-django",
+        "njpwerner.autodocstring",
+        "editorconfig.editorconfig",
+        "ms-vsliveshare.vsliveshare"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python3"
+      }
+    }
+  },
+  "remoteUser": "codespace"
+}

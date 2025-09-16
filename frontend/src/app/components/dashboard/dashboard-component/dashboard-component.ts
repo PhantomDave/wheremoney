@@ -2,24 +2,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget } from 'gridstack/dist/angular';
 import { Widget } from '../../../models/widget';
+import { WidgetService } from '../../../services/widget/widget-service';
 import { BarChartComponentComponent } from '../../widgets/charts/bar-chart-component/bar-chart-component.component';
 import { PieChartComponent } from '../../widgets/charts/pie-chart-component/pie-chart-component';
 import { WidgetWrapper } from '../../widgets/widget-wrapper/widget-wrapper';
 import { DashboardDrawerComponent } from '../dashboard-drawer-component/dashboard-drawer-component';
-import { WidgetService } from '../../../services/widget/widget-service';
 
 @Component({
   selector: 'app-dashboard-component',
   // Include widget components so Angular can resolve and instantiate them
   // when Gridstack dynamically inserts them via the selector.
-  imports: [
-    GridstackComponent,
-    MatIconModule,
-    DashboardDrawerComponent,
-    WidgetWrapper,
-    PieChartComponent,
-    BarChartComponentComponent,
-  ],
+  imports: [GridstackComponent, MatIconModule, DashboardDrawerComponent],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
