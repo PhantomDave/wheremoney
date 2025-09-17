@@ -30,7 +30,7 @@
     "@angular/forms": "^20.2.0",
     "@angular/material": "^20.2.2",
     "@angular/platform-browser": "^20.2.0",
-    "@angular/router": "^20.2.0",
+    "@angular/router": "^20.3.1",
     "chart.js": "^4.5.0",
     "gridstack": "^12.3.3",
     "ng2-charts": "^8.0.0",
